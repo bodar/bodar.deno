@@ -5,7 +5,7 @@ import {AssertionError} from "https://deno.land/std@0.200.0/assert/assertion_err
 import {describe} from "../../src/totallylazy/test.ts";
 
 describe("assertThat", async (it) => {
-    let actual = 2;
+    const actual = 2;
 
     await it('does not throw when predicate matches', () => {
         assertThat(actual, is(actual));

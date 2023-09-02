@@ -3,7 +3,7 @@ import {is, not} from "../../src/totallylazy/predicates.ts";
 import {describe} from "../../src/totallylazy/test.ts";
 
 describe("is", async (it) => {
-    let p = is(2);
+    const p = is(2);
 
     await it("does strict equality", () => {
         assert(p(2));
@@ -15,8 +15,8 @@ describe("is", async (it) => {
 });
 
 describe("not", async (it) => {
-    let original = is(2);
-    let p = not(original);
+    const original = is(2);
+    const p = not(original);
 
     await it("negates the original predicate", () => {
         assert(p(3));
