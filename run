@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+
+if [[ $(command -v asdf) ]]; then
+  if [[ ! $(asdf plugin list) =~ deno ]]; then
+    asdf plugin add deno
+  fi
+  asdf install deno
+fi
+
 set -Eeo pipefail
 
 deno test ./test/
