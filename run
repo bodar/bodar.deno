@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -Eeo pipefail
 
 if [[ ! $(command -v asdf) ]]; then
   echo "* Downloading and installing asdf..."
@@ -11,7 +12,5 @@ if [[ ! $(asdf plugin list) =~ deno ]]; then
   asdf plugin add deno > /dev/null 2>&1
 fi
 asdf install
-
-set -Eeo pipefail
 
 deno test ./test/
