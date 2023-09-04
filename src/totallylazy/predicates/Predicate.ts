@@ -1,5 +1,5 @@
 /**
- * A Predicate is a function that returns true or false for a given value.
+ * A predicate is a function that returns true or false for a given value.
  */
 export interface Predicate<A> {
     /**
