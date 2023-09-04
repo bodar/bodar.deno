@@ -1,8 +1,8 @@
-import {assertThat} from "../../src/totallylazy/assert.ts";
-import {is} from "../../src/totallylazy/predicates.ts";
 import {assertThrows} from "https://deno.land/std@0.200.0/assert/assert_throws.ts";
+import {describe} from "../../../src/totallylazy/testing/describe.ts";
+import {assertThat} from "../../../src/totallylazy/testing/assertThat.ts";
+import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 import {AssertionError} from "https://deno.land/std@0.200.0/assert/assertion_error.ts";
-import {describe} from "../../src/totallylazy/test.ts";
 
 describe("assertThat", async (it) => {
     const actual = 2;
