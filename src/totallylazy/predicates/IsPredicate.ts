@@ -1,11 +1,17 @@
-import {DescriptivePredicate} from "./Predicate.ts";
+import {Predicate} from "./Predicate.ts";
 
-export interface IsPredicate<A> extends DescriptivePredicate<A> {
+/**
+ * A predicate that checks if the value is strictly equal to the given value
+ */
+export interface IsPredicate<A> extends Predicate<A> {
+    /**
+     * The value to check against
+     */
     value: A;
 }
 
 /**
- * Returns a predicate that does a strict equality check against the value
+ * Creates a predicate that checks if the value is strictly equal to the given value
  */
 export function is<A>(value: A): IsPredicate<A> {
     return Object.assign((a: A) => a === value, {

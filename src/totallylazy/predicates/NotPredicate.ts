@@ -1,7 +1,12 @@
-import {DescriptivePredicate, Predicate} from "./Predicate.ts";
+import {Predicate} from "./Predicate.ts";
 
-
-export interface NotPredicate<A> extends DescriptivePredicate<A> {
+/**
+ * A predicate that negates the given predicate
+ */
+export interface NotPredicate<A> extends Predicate<A> {
+    /**
+     * The predicate to negate
+     */
     predicate: Predicate<A>
 }
 
