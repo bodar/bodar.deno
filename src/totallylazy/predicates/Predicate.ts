@@ -10,5 +10,5 @@ export interface Predicate<A> {
     /**
      * Returns a string representation of the predicate
      */
-    toString?(): string;
+    toString(): string;
 }
