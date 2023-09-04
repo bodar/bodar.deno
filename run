@@ -16,4 +16,4 @@ asdf install
 
 deno check **/*.ts
 deno lint
-deno test ./test/
+deno test --parallel --reporter=dot ./test/
