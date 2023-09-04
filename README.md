@@ -6,9 +6,9 @@ Top level tasks
   * [x] tests
   * [x] lint
   * [x] typecheck
-  * [ ] CI target
-    * [ ] Publish to deno.loand/x
-    * [ ] TSDoc/JSDoc
+  * [x] CI target
+    * [x] Publish to deno.loand/x
+    * [x] TSDoc/JSDoc
     * [ ] Tests -> Docs
 
 * totallylazy
