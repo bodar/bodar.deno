@@ -32,8 +32,8 @@ function setup_deno() {
 function tag() {
   version
 
-  git config user.email "server@bodar.com"
-  git config user.name "${USER}"
+  git config --global user.email "server@bodar.com"
+  git config --global user.name "${USER}"
   git tag -a ${VERSION} -m "Release ${VERSION}"
   git push origin ${VERSION}
 }
