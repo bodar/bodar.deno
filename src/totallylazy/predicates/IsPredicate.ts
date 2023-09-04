@@ -10,7 +10,9 @@ export interface IsPredicate<A> extends DescriptivePredicate<A> {
  * @param {T} value
  * @returns {IsPredicate<T>}
  */
-export const is = <A>(value: A): IsPredicate<A> => Object.assign((a: A) => a === value, {
-    value: value,
-    toString: () => `is(${value})`
-});
+export function is<A>(value: A): IsPredicate<A> {
+    return Object.assign((a: A) => a === value, {
+        value: value,
+        toString: () => `is(${value})`
+    });
+}
