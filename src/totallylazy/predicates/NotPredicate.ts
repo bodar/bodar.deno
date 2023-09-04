@@ -5,6 +5,9 @@ export interface NotPredicate<A> extends DescriptivePredicate<A> {
     predicate: Predicate<A>
 }
 
+/**
+ * Negates the given predicate
+ */
 export function not<A>(predicate: Predicate<A>): NotPredicate<A> {
     return Object.assign((a: A) => !predicate(a), {
         predicate,
