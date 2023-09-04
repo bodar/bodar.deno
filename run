@@ -2,18 +2,53 @@
 set -Eeo pipefail
 shopt -s globstar
 
-if [[ ! $(command -v asdf) ]]; then
-  echo "* Downloading and installing asdf..."
-  git clone -c advice.detachedHead=false https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.12.0 > /dev/null 2>&1
-  . "$HOME/.asdf/asdf.sh"
-fi
+function version() {
+  export BRANCH=${CIRCLE_BRANCH-$(git rev-parse --abbrev-ref HEAD)}
+  export BUILD_NUMBER=${CIRCLE_BUILD_NUM-$(date -u +"%Y%m%d%H%M%S")}
+  export REVISIONS=$(git rev-list --count ${BRANCH})
+  export VERSION=0.${REVISIONS}.${BUILD_NUMBER}
 
-if [[ ! $(asdf plugin list) =~ deno ]]; then
-  echo "* Downloading and installing deno plugin..."
-  asdf plugin add deno > /dev/null 2>&1
-fi
-asdf install
+  echo version: ${VERSION}
+}
 
-deno check src/**/*.ts
-deno lint --compact src/**/*.ts
-deno test --parallel --reporter=dot ./test/
+function setup_asdf() {
+  if [[ ! $(command -v asdf) ]]; then
+    echo "* Downloading and installing asdf..."
+    git clone -c advice.detachedHead=false https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.12.0 > /dev/null 2>&1
+    . "$HOME/.asdf/asdf.sh"
+  fi
+}
+
+function setup_deno() {
+  setup_asdf
+
+  if [[ ! $(asdf plugin list) =~ deno ]]; then
+    echo "* Downloading and installing deno plugin..."
+    asdf plugin add deno > /dev/null 2>&1
+  fi
+  asdf install
+}
+
+function tag() {
+  version
+
+  git tag -a ${VERSION} -m "Release ${VERSION}"
+  git push origin ${VERSION}
+}
+
+function build() {
+  setup_deno
+
+  deno check src/**/*.ts
+  deno lint --compact src/**/*.ts
+  deno test --parallel --reporter=dot ./test/
+}
+
+function ci() {
+  build
+  tag
+}
+
+command="${1-build}"
+set +e; shift; set -Eeo pipefail;
+$command "$@"
