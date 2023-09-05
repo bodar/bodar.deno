@@ -1,4 +1,6 @@
 # bodar.deno
+[![bodar](https://circleci.com/gh/bodar/bodar.deno.svg?style=svg)](https://app.circleci.com/pipelines/github/bodar/bodar.deno)
+[![codecov](https://codecov.io/gh/bodar/bodar.deno/graph/badge.svg?token=USVRV8KZ4R)](https://codecov.io/gh/bodar/bodar.deno)
 
 Top level tasks
 * [x] Basic structure
