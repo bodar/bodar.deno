@@ -43,7 +43,8 @@ function build() {
 
   deno check src/**/*.ts
   deno lint --compact src/**/*.ts
-  deno test --parallel --reporter=dot ./test/
+  mkdir -p artifacts
+  deno test --parallel --reporter=dot --junit-path=artifacts/test-results ./test/
 }
 
 function ci() {
