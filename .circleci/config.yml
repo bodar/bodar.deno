@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  codecov: codecov/codecov@3.2.5
 jobs:
   build:
     docker:
@@ -13,3 +15,5 @@ jobs:
           command: ./run ci
       - store_test_results:
           path: artifacts/test-results
+      - codecov/upload:
+          file: artifacts/coverage.lcov

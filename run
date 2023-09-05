@@ -43,8 +43,9 @@ function build() {
 
   deno check src/**/*.ts
   deno lint --compact src/**/*.ts
-  mkdir -p artifacts
-  deno test --parallel --reporter=dot --junit-path=artifacts/test-results ./test/
+  mkdir -p artifacts/coverage
+  deno test --parallel --reporter=dot --junit-path=artifacts/test-results --coverage=artifacts/coverage ./test/
+  deno coverage --lcov artifacts/coverage/ --output=artifacts/coverage.lcov
 }
 
 function ci() {
