@@ -53,6 +53,7 @@ function ci() {
   tag
 }
 
+
 command="${1-build}"
 set +e; shift; set -Eeo pipefail;
 $command "$@"
