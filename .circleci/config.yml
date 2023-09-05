@@ -12,4 +12,4 @@ jobs:
           name: build
           command: ./run ci
       - store_test_results:
-        path: artifacts/test-results
+          path: artifacts/test-results
