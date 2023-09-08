@@ -3,19 +3,17 @@ import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 import {not} from "../../../src/totallylazy/predicates/NotPredicate.ts";
 
 Deno.test("NotPredicate", async (context) => {
-    const original = is(2);
-    const p = not(original);
-
     await context.step("negates the original predicate", () => {
-        assert(p(3));
-        assert(!p(2));
+        assert(not(is(2))(3));
+        assert(!not(is(2))(2));
     });
 
     await context.step("is inspectable", () => {
-        assert(p.predicate === original);
+        const p = is(2);
+        assert(not(p).predicate === p);
     });
 
     await context.step("is self describing", () => {
-        assert(p.toString() === 'not(is(2))');
+        assert(not(is(2)).toString() === 'not(is(2))');
     });
 });

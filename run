@@ -50,6 +50,11 @@ function build() {
   deno coverage --lcov artifacts/coverage/ --output=artifacts/coverage.lcov
 }
 
+function dev() {
+    deno test --parallel --reporter=dot --watch ./test/
+
+}
+
 function ci() {
   build
   tag
