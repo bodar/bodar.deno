@@ -16,6 +16,6 @@ export interface Property<A, K extends keyof A> extends Mapper<A, A[K]> {
 export function property<A, K extends keyof A>(key: K): Property<A, K> {
     return Object.assign((a: A) => a[key], {
         key,
-        toString: () => `property(${String(key)})`
+        toString: () => `property('${String(key)}')`
     })
 }
