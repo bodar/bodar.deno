@@ -40,26 +40,42 @@ function tag() {
   git push origin ${VERSION}
 }
 
-function build() {
-  setup_deno
+function clean() {
+  rm -rf artifacts
+}
 
-  deno check src/**/*.ts
-  deno lint --compact src/**/*.ts
-  mkdir -p artifacts/coverage
-  deno test --parallel --reporter=dot --junit-path=artifacts/test-results --coverage=artifacts/coverage ./test/
-  deno coverage --lcov artifacts/coverage/ --output=artifacts/coverage.lcov
+function check() {
+  deno check {src,test}/**/*.ts
+  deno lint --compact {src,test}/**/*.ts
+}
+
+function test() {
+    deno test --parallel --reporter=dot $@ ./test/
+}
+
+function test-with-coverage() {
+    mkdir -p artifacts/coverage
+    test --junit-path=artifacts/test-results --coverage=artifacts/coverage
+    deno coverage --lcov artifacts/coverage/ --output=artifacts/coverage.lcov
 }
 
 function dev() {
-    deno test --parallel --reporter=dot --watch ./test/
+  test --watch
+}
 
+function build() {
+  check
+  test
 }
 
 function ci() {
-  build
+  check
+  test-with-coverage
   tag
 }
 
+setup_deno
+clean
 
 command="${1-build}"
 set +e; shift; set -Eeo pipefail;

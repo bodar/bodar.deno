@@ -5,7 +5,7 @@ export interface Predicate<A> {
     /**
      * Returns true if the predicate holds for the given value, false otherwise
      */
-    (a: A) : boolean;
+    (a: A) : boolean
 
     /**
      * Returns a string representation of the predicate
