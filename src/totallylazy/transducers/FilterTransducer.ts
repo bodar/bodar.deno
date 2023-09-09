@@ -1,4 +1,4 @@
-import {Predicate} from "../../predicates/Predicate.ts";
+import {Predicate} from "../predicates/Predicate.ts";
 import {Transducer} from "./Transducer.ts";
 
 /**

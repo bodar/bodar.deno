@@ -1,5 +1,5 @@
 import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
-import {filter} from "../../../src/totallylazy/transducers/sync/FilterTransducer.ts";
+import {filter} from "../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 
