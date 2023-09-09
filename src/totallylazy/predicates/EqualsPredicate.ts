@@ -22,6 +22,9 @@ export function equals<A>(value: A): EqualsPredicate<A> {
     });
 }
 
+/**
+ * Checks if two values are deeply equal by value
+ */
 export function equal(a: unknown, b: unknown): boolean {
     if (Object.is(a, b)) return true;
     if (a === null || b === null) return false;
