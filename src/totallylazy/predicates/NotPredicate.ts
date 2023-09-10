@@ -7,7 +7,7 @@ export interface NotPredicate<A> extends Predicate<A> {
     /**
      * The predicate to negate
      */
-    predicate: Predicate<A>
+    readonly predicate: Predicate<A>
 }
 
 /**

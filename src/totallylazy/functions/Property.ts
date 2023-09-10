@@ -7,7 +7,7 @@ export interface Property<A, K extends keyof A> extends Mapper<A, A[K]> {
     /**
      * The property key
      */
-    key: K
+    readonly key: K
 }
 
 /**

@@ -7,7 +7,7 @@ export interface IsPredicate<A> extends Predicate<A> {
     /**
      * The value to check against
      */
-    value: A;
+    readonly value: A;
 }
 
 /**

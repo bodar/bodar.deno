@@ -9,12 +9,12 @@ export interface WherePredicate<A, B> extends Predicate<A> {
     /**
      * The function used to extract a value of type <B> from <A>
      */
-    mapper: Mapper<A, B>;
+    readonly mapper: Mapper<A, B>;
 
     /**
      * The predicate to check <B> against
      */
-    predicate: Predicate<B>;
+    readonly predicate: Predicate<B>;
 }
 
 /**

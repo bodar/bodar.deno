@@ -8,7 +8,7 @@ export interface MapTransducer<A, B> extends Transducer<A, B> {
     /**
      * The mapper to map by
      */
-    mapper: Mapper<A, B>;
+    readonly mapper: Mapper<A, B>;
 }
 
 /**

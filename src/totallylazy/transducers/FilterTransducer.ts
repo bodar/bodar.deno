@@ -8,7 +8,7 @@ export interface FilterTransducer<A> extends Transducer<A, A> {
     /**
      * The predicate to filter by
      */
-    predicate: Predicate<A>
+    readonly predicate: Predicate<A>
 }
 
 /**

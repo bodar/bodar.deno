@@ -8,13 +8,13 @@ export interface Select<A> extends Mapper<A, Partial<A>> {
     /**
      * The properties to extract
      */
-    properties: ReadonlyArray<Property<A, keyof A>>;
+    readonly properties: ReadonlyArray<Property<A, keyof A>>;
 }
 
 /**
  * Creates a Select that extracts the given properties from an object
  */
-export function select<A>(...properties: Array<Property<A, keyof A>>): Select<A> {
+export function select<A>(...properties: readonly Property<A, keyof A>[]): Select<A> {
     return Object.assign((a: A) => {
         const result: Partial<A> = {};
         for (const property of properties) {
