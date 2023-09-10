@@ -2,7 +2,7 @@ import {AssertionError} from "https://deno.land/std@0.200.0/assert/assertion_err
 import {Predicate} from "../predicates/Predicate.ts";
 import {is} from "../predicates/IsPredicate.ts";
 
-export function assertThat<A>(actual: A, predicate: Predicate<A>) {
+export function assertThat(actual: unknown, predicate: Predicate<any>) {
     if (!predicate(actual)) {
         throw new AssertionError(`assertThat(${actual}, ${predicate});`);
     }
