@@ -46,7 +46,7 @@ function clean() {
 
 function check() {
   deno check {src,test}/**/*.ts
-  deno lint --compact {src,test}/**/*.ts
+  deno lint --compact
 }
 
 function test() {

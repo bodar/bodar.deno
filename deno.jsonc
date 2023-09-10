@@ -1,3 +1,9 @@
 {
 // presence of this file ensures the deno.lock file is used
+  "lint": {
+    "include": ["src/", "test/"],
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    }
+  }
 }
