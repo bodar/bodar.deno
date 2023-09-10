@@ -20,6 +20,10 @@ Deno.test("Select", async (context) => {
         assertThat(selection(car), equals({make: 'Ford', colour: 'Red'}));
     });
 
+    await context.step("can also be created from property keys", () => {
+        assertThat(select('make', 'colour')(car), equals({make: 'Ford', colour: 'Red'}));
+    });
+
     await context.step("is inspectable", () => {
         assertThat(selection.properties, equals(properties));
     });

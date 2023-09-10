@@ -1,5 +1,5 @@
 import {Mapper} from "./Mapper.ts";
-import {Property} from "./Property.ts";
+import {Property, property} from "./Property.ts";
 
 /**
  * The Select function can be used to extract a subset of properties from an object
@@ -14,15 +14,16 @@ export interface Select<A> extends Mapper<A, Partial<A>> {
 /**
  * Creates a Select that extracts the given properties from an object
  */
-export function select<A>(...properties: readonly Property<A, keyof A>[]): Select<A> {
+export function select<A>(...properties: readonly (Property<A, keyof A>|keyof A)[]): Select<A> {
+    const converted: Property<A, keyof A>[] = properties.map(p => typeof p === "function" ? p : property(p));
     return Object.assign((a: A) => {
         const result: Partial<A> = {};
-        for (const property of properties) {
-            result[property.key] = property(a);
+        for (const p of converted) {
+            result[p.key] = p(a);
         }
         return result;
     }, {
-        properties,
+        properties: converted,
         toString: () => `select(${properties})`
     });
 }
