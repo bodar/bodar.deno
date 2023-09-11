@@ -2,7 +2,7 @@ import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {filter} from "../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
-import {compose} from "../../../src/totallylazy/transducers/CompositeTransducer.ts";
+import {compose, decompose} from "../../../src/totallylazy/transducers/CompositeTransducer.ts";
 import {map} from "../../../src/totallylazy/transducers/MapTransducer.ts";
 
 Deno.test("CompositeTransducer", async (context) => {
@@ -15,12 +15,12 @@ Deno.test("CompositeTransducer", async (context) => {
         assertThat(Array.from(t([1, 2, 3, 4, 5])), equals(['2', '4']));
     });
 
-    await context.step("is inspectable", () => {
-        assertThat(t.transducers, equals([f, m]));
+    await context.step("is decomposeable", () => {
+        assertThat(Array.from(decompose(t)), equals([f, m]));
     });
 
     await context.step("is self describing", () => {
-        assertThat(t.toString(), is(`transducers(${f},${m})`));
+        assertThat(t.toString(), is(`${f}, ${m}`));
     });
 
     await context.step("overload works with more than 2 arguments", () => {
@@ -30,7 +30,7 @@ Deno.test("CompositeTransducer", async (context) => {
 
     await context.step("always flattens nested transducers", () => {
         const r = compose(filter(even), map(String), compose(filter(v => v.length > 1), map(Number)));
-        assertThat(r.transducers.length, is(4));
+        assertThat(Array.from(decompose(r)).length, is(4));
     });
 
 });
