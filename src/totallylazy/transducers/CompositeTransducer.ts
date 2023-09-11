@@ -22,7 +22,7 @@ export function compose(...transducers: readonly Transducer<any, any>[]): Compos
     const flat = flatten(transducers);
     return Object.assign((iterable: Iterable<any>) => flat.reduce((a, t) => t(a), iterable), {
         transducers: flat,
-        toString: () => `transducers(${transducers})`
+        toString: () => transducers.join(', ')
     });
 }
 

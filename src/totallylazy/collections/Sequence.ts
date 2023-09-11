@@ -1,6 +1,13 @@
 import {Transducer} from "../transducers/Transducer.ts";
 import {flatten} from "../transducers/CompositeTransducer.ts";
 
+/**
+ * A Sequence is an Iterable that is composed of a source Iterable and a set of Transducers
+ *
+ * Compared to a normal Iterable like an Array, a Sequence is lazy and composable. This means that
+ * it will only evaluate the source Iterable when it is iterated over, and that no intermediate
+ * objects like arrays are created when applying multiple transformations.
+ */
 export class Sequence<T> implements Iterable<T> {
     constructor(public readonly source: Iterable<any>,
                 public readonly transducers: readonly Transducer<any, any>[]) {
@@ -15,6 +22,9 @@ export class Sequence<T> implements Iterable<T> {
     }
 }
 
+/**
+ * Creates a Sequence from the given iterable and transducers
+ */
 export function sequence<A>(a: Iterable<A>): Sequence<A>;
 export function sequence<A, B>(a: Iterable<A>, b: Transducer<A, B>): Sequence<B>;
 export function sequence<A, B, C>(a: Iterable<A>, b: Transducer<A, B>, c: Transducer<B, C>): Sequence<C>;

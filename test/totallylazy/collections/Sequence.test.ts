@@ -2,7 +2,6 @@ import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {filter} from "../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
-import {compose} from "../../../src/totallylazy/transducers/CompositeTransducer.ts";
 import {map} from "../../../src/totallylazy/transducers/MapTransducer.ts";
 import {sequence} from "../../../src/totallylazy/collections/Sequence.ts";
 
