@@ -1,17 +1,19 @@
 import {Client} from "https://deno.land/x/postgres@v0.17.0/mod.ts";
-import {Transducer} from "../../totallylazy/transducers/Transducer.ts";
-import {Predicate} from "../../totallylazy/predicates/Predicate.ts";
-import {isWherePredicate} from "../../totallylazy/predicates/WherePredicate.ts";
-import {isFilterTransducer} from "../../totallylazy/transducers/FilterTransducer.ts";
-import {isProperty} from "../../totallylazy/functions/Property.ts";
-import {Mapper} from "../../totallylazy/functions/Mapper.ts";
-import {isIsPredicate} from "../../totallylazy/predicates/IsPredicate.ts";
+import {Transducer} from "../../../totallylazy/transducers/Transducer.ts";
+import {isFilterTransducer} from "../../../totallylazy/transducers/FilterTransducer.ts";
+import {isIsPredicate} from "../../../totallylazy/predicates/IsPredicate.ts";
+import {Predicate} from "../../../totallylazy/predicates/Predicate.ts";
+import {isProperty} from "../../../totallylazy/functions/Property.ts";
+import {isWherePredicate} from "../../../totallylazy/predicates/WherePredicate.ts";
+import {Mapper} from "../../../totallylazy/functions/Mapper.ts";
 
 export interface Definition<A> {
     name: string;
 }
 
-// TODO: 100% hacky
+/**
+ * DO NOT USE. Spike only
+ */
 export class PostgresSqlBuilder {
     private whereClause: string = '';
 
