@@ -26,3 +26,10 @@ export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): Wher
         predicate
     });
 }
+
+/**
+ * Checks if the given value is a WherePredicate
+ */
+export function isWherePredicate(value: any): value is WherePredicate<any, any> {
+    return value && typeof value === 'function' && value.mapper && value.predicate;
+}

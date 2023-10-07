@@ -29,3 +29,8 @@ export function filter<A>(predicate: Predicate<A>): FilterTransducer<A> {
  * Alias for filter (inspired by ruby)
  */
 export const accept = filter;
+
+
+export function isFilterTransducer(value: any): value is FilterTransducer<any> {
+    return value && typeof value === 'function' && value.predicate;
+}

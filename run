@@ -50,7 +50,7 @@ function check() {
 }
 
 function test() {
-    deno test --parallel --reporter=dot $@ ./test/
+    deno test --parallel --allow-net $@ ./test/
 }
 
 function test-with-coverage() {

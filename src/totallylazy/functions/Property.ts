@@ -19,3 +19,7 @@ export function property<A, K extends keyof A>(key: K): Property<A, K> {
         toString: () => `property('${String(key)}')`
     })
 }
+
+export function isProperty(value: any): value is Property<any, any> {
+    return value && typeof value === 'function' && value.key;
+}

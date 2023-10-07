@@ -19,3 +19,7 @@ export function is<A>(value: A): IsPredicate<A> {
         toString: () => `is(${value})`
     });
 }
+
+export function isIsPredicate(value: any): value is IsPredicate<any> {
+    return value && typeof value === 'function' && value.value;
+}
