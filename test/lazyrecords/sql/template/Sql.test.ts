@@ -46,8 +46,8 @@ Deno.test('SQL', async (context) => {
     await context.step('can nest SQL expressions', function () {
         assertThat(SQL`SELECT * ${SQL`FROM users WHERE name = ${undefined}`}`, equals(sql(
             text('SELECT * '),
-            text('FROM users WHERE name = '),
-            value(null),
+            sql(text('FROM users WHERE name = '),
+                value(null)),
         )));
     });
 
@@ -60,9 +60,11 @@ Deno.test('SQL', async (context) => {
     await context.step('can spread an array into multiple values', function () {
         assertThat(SQL`(${spread(['Dan', 'Bodart'])})`, equals(sql(
             text('('),
-            value('Dan'),
-            text(', '),
-            value('Bodart'),
+            sql(
+                value('Dan'),
+                text(', '),
+                value('Bodart'),
+            ),
             text(')'),
         )));
     });
