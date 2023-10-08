@@ -1,6 +1,7 @@
 import {Predicate} from "./Predicate.ts";
-import {Comparator} from "../comparitors/Comparator.ts";
-import {ascending} from "../comparitors/mod.ts";
+import {Comparator} from "../comparators/Comparator.ts";
+
+import {ascending} from "../comparators/ascending.ts";
 
 /**
  * A predicate that checks if the value is between the given values

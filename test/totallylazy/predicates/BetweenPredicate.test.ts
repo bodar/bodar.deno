@@ -5,7 +5,7 @@ import {between} from "../../../src/totallylazy/predicates/BetweenPredicate.ts";
 Deno.test("BetweenPredicate", async (context) => {
     const predicate = between(2, 4);
 
-    await context.step("can use built in comparitors", () => {
+    await context.step("can use built in comparators", () => {
         assertThat(predicate(1), is(false));
         assertThat(predicate(2), is(true));
         assertThat(predicate(3), is(true));
