@@ -1,6 +1,9 @@
 import {text} from "../template/Text.ts";
 import {SetQuantifier} from "./SetQuantifier.ts";
 import {Compound} from "../template/Compound.ts";
+import {DerivedColumn} from "./DerivedColumn.ts";
+import {SelectList} from "./SelectList.ts";
+import {FromClause} from "./FromClause.ts";
 
 
 /*
@@ -18,23 +21,16 @@ import {Compound} from "../template/Compound.ts";
 export class SelectExpression extends Compound {
     static select = text("select");
 
-    constructor(public readonly setQuantifier: SetQuantifier = SetQuantifier.All) {
-        super([SelectExpression.select, setQuantifier]);
+    constructor(public readonly setQuantifier: SetQuantifier = SetQuantifier.All,
+                public readonly selectList: SelectList,
+                public readonly fromClause: FromClause) {
+        super([SelectExpression.select, setQuantifier, selectList, fromClause]);
     }
 }
 
-export function select(setQuantifier: SetQuantifier = SetQuantifier.All): SelectExpression {
-    return new SelectExpression(setQuantifier);
+export function select(setQuantifier: SetQuantifier = SetQuantifier.All,
+                       selectList: DerivedColumn[],
+                       fromClause: FromClause): SelectExpression {
+    return new SelectExpression(setQuantifier, new SelectList(selectList), fromClause);
 }
 
-// export class DerivedColumn extends Sql {
-//     constructor(public readonly expression: Expression, public readonly alias: string) {
-//         super([expression, text("as"), alias], " ");
-//     }
-// }
-//
-// export class AsClause extends Sql {
-//     constructor(public readonly expression: Expression, public readonly alias: string) {
-//         super([expression, text("as"), alias], " ");
-//     }
-// }

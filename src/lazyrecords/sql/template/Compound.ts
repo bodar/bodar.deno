@@ -15,14 +15,15 @@ export class Compound extends Expression implements Iterable<Text | Identifier |
         if (this.start !== empty) yield this.start;
         let first = true;
         for (const expression of this.expressions) {
+            if (first) {
+                first = false;
+            } else {
+                if (this.separator !== empty) yield this.separator;
+            }
             if (expression instanceof Text) yield expression;
             if (expression instanceof Identifier) yield expression;
             if (expression instanceof Value) yield expression;
             if (expression instanceof Compound) yield* expression;
-            if (first) {
-                if (this.separator !== empty) yield this.separator;
-                first = false;
-            }
         }
         if (this.end !== empty) yield this.end;
     }

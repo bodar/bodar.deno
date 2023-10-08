@@ -92,6 +92,7 @@
     "https://deno.land/std@0.200.0/http/user_agent.ts": "35d3c70d0926b0e121b8c1bbc324b3522479158acaa4f0c43928362b7bf4e6f4",
     "https://deno.land/std@0.203.0/encoding/_util.ts": "f368920189c4fe6592ab2e93bd7ded8f3065b84f95cd3e036a4a10a75649dcba",
     "https://deno.land/std@0.203.0/encoding/hex.ts": "d41e9c3f7dd9d4738c40c2b9e6db5eb32e9dc103360291aff63a5c3fccdb45a6",
+    "https://deno.land/x/assertion_error@v2.0.0/mod.ts": "67872a18e15e8f83c9a7440f7d7f50e6485221c56e7ce92fc6aa99d190301d55",
     "https://deno.land/x/postgres@v0.17.0/client.ts": "348779c9f6a1c75ef1336db662faf08dce7d2101ff72f0d1e341ba1505c8431d",
     "https://deno.land/x/postgres@v0.17.0/client/error.ts": "0817583b666fd546664ed52c1d37beccc5a9eebcc6e3c2ead20ada99b681e5f7",
     "https://deno.land/x/postgres@v0.17.0/connection/auth.ts": "1070125e2ac4ca4ade36d69a4222d37001903092826d313217987583edd61ce9",
