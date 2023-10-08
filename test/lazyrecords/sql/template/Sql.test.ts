@@ -13,9 +13,7 @@ Deno.test('SQL', async (context) => {
     await context.step('text and value', function () {
         assertThat(SQL`${1}`, equals(sql(value(1))));
         const name = 'Dan';
-        assertThat(SQL`select *
-                       from user
-                       where name = ${name};`, equals(sql(
+        assertThat(SQL`select * from user where name = ${name};`, equals(sql(
             text('select * from user where name = '),
             value(name),
             text(';')

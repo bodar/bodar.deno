@@ -79,12 +79,12 @@ export function SQL(chunks: TemplateStringsArray, ...values: readonly unknown[])
  * With optional separator. Defaults to ', '.
  */
 export function ids(identifiers: readonly string[]): Sql {
-    return sql(identifiers.map(id), ', ');
+    return new Sql(identifiers.map(id), ', ');
 }
 
 
 export function values(values: unknown[] ): Sql {
-    return sql(values.map(value), ', ');
+    return new Sql(values.map(value), ', ');
 }
 
 export const spread = values;
