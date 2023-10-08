@@ -15,6 +15,8 @@ export class Text extends Expression {
  * Create a Text expression from a string.
  */
 export function text(text: string): Text {
+    if(text === '') return empty;
+    if(text === ' ') return space;
     return new Text(text);
 }
 
@@ -22,3 +24,13 @@ export function text(text: string): Text {
  * Alias for text.
  */
 export const raw = text;
+
+/**
+ * An empty text expression.
+ */
+export const empty = new Text('');
+
+/**
+ * A space text expression.
+ */
+export const space = new Text(' ');

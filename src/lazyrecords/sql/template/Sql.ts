@@ -3,32 +3,14 @@ import {value, Value} from "./Value.ts";
 import {id, Identifier} from "./Identifier.ts";
 import {escapeIdentifier, escapeLiteral} from "../ansi/escape.ts";
 import {Expression} from "./Expression.ts";
+import {CompoundExpression} from "./CompoundExpression.ts";
 
 /**
  * A Sql expression.
  */
-export class Sql extends Expression implements Iterable<Text | Identifier | Value> {
-    constructor(private readonly expressions: readonly Expression[],
-                private separator: string = "",
-                private start: string = "",
-                private end: string = start) {
-        super();
-    }
-
-    * [Symbol.iterator](): Iterator<Text | Identifier | Value> {
-        if (this.start !== '') yield text(this.start);
-        let first = true;
-        for (const expression of this.expressions) {
-            if (expression instanceof Text) yield expression;
-            if (expression instanceof Identifier) yield expression;
-            if (expression instanceof Value) yield expression;
-            if (expression instanceof Sql) yield* expression;
-            if (first) {
-                if (this.separator !== '') yield text(this.separator);
-                first = false;
-            }
-        }
-        if (this.end !== '') yield text(this.end);
+export class Sql extends CompoundExpression implements Iterable<Text | Identifier | Value> {
+    constructor(readonly expressions: readonly Expression[]) {
+        super(expressions, text(""));
     }
 
     generate(handler: (expression: (Identifier | Value)) => string): string {
@@ -78,13 +60,13 @@ export function SQL(chunks: TemplateStringsArray, ...values: readonly unknown[])
  *
  * With optional separator. Defaults to ', '.
  */
-export function ids(identifiers: readonly string[]): Sql {
-    return new Sql(identifiers.map(id), ', ');
+export function ids(identifiers: readonly string[]): CompoundExpression {
+    return new CompoundExpression(identifiers.map(id), text(', '));
 }
 
 
-export function values(values: unknown[] ): Sql {
-    return new Sql(values.map(value), ', ');
+export function values(values: unknown[] ): CompoundExpression {
+    return new CompoundExpression(values.map(value), text(', '));
 }
 
 export const spread = values;
