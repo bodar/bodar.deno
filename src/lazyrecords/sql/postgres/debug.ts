@@ -1,7 +1,7 @@
 import {Sql} from "../template/Sql.ts";
 import {Identifier} from "../template/Identifier.ts";
-import {escapeIdentifier, escapeLiteral} from "./escape.ts";
 import {Value} from "../template/Value.ts";
+import {escapeIdentifier, escapeLiteral} from "../ansi/escape.ts";
 
 export function debugQuery(sql: Sql): string {
     return sql.generate(e => {

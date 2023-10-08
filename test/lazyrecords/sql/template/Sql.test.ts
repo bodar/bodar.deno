@@ -1,8 +1,8 @@
 import {assertThat} from "../../../../src/totallylazy/asserts/assertThat.ts";
 import {equals} from "../../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {SQL, sql} from "../../../../src/lazyrecords/sql/template/Sql.ts";
+import {spread, sql, SQL} from "../../../../src/lazyrecords/sql/template/Sql.ts";
 import {text} from "../../../../src/lazyrecords/sql/template/Text.ts";
-import {spread, value} from "../../../../src/lazyrecords/sql/template/Value.ts";
+import {value} from "../../../../src/lazyrecords/sql/template/Value.ts";
 
 Deno.test('SQL', async (context) => {
     await context.step('text', function () {
@@ -13,7 +13,9 @@ Deno.test('SQL', async (context) => {
     await context.step('text and value', function () {
         assertThat(SQL`${1}`, equals(sql(value(1))));
         const name = 'Dan';
-        assertThat(SQL`select * from user where name = ${name};`, equals(sql(
+        assertThat(SQL`select *
+                       from user
+                       where name = ${name};`, equals(sql(
             text('select * from user where name = '),
             value(name),
             text(';')

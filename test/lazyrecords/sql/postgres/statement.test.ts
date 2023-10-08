@@ -1,7 +1,6 @@
 import {statement} from "../../../../src/lazyrecords/sql/postgres/statement.ts";
-import {id, ids} from "../../../../src/lazyrecords/sql/template/Identifier.ts";
-import {values} from "../../../../src/lazyrecords/sql/template/Value.ts";
-import {SQL} from "../../../../src/lazyrecords/sql/template/Sql.ts";
+import {id} from "../../../../src/lazyrecords/sql/template/Identifier.ts";
+import {SQL, ids, values} from "../../../../src/lazyrecords/sql/template/Sql.ts";
 import {assertThat} from "../../../../src/totallylazy/asserts/assertThat.ts";
 import {equals} from "../../../../src/totallylazy/predicates/EqualsPredicate.ts";
 

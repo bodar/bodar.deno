@@ -1,8 +1,8 @@
 import {QueryOptions} from "https://deno.land/x/postgres@v0.17.0/query/query.ts";
-import {escapeIdentifier} from "./escape.ts";
 import {Sql} from "../template/Sql.ts";
 import {Identifier} from "../template/Identifier.ts";
 import {Value} from "../template/Value.ts";
+import {escapeIdentifier} from "../ansi/escape.ts";
 
 function generatePlaceholders(sql: Sql) {
     let count = 1;

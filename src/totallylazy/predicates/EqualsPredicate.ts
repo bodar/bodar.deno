@@ -1,4 +1,5 @@
 import {Predicate} from "./Predicate.ts";
+import {toString} from "../functions/toString.ts";
 
 /**
  * A predicate that checks if the value is deeply equal by value to the given value
@@ -18,7 +19,7 @@ export interface EqualsPredicate<A> extends Predicate<A> {
 export function equals<A>(value: A): EqualsPredicate<A> {
     return Object.assign((a: A) => equal(a, value), {
         value: value,
-        toString: () => `equals(${value})`
+        toString: () => `equals(${toString(value)})`
     });
 }
 
