@@ -1,6 +1,6 @@
 import {text} from "../template/Text.ts";
 import {SetQuantifier} from "./SetQuantifier.ts";
-import {CompoundExpression} from "../template/CompoundExpression.ts";
+import {Compound} from "../template/Compound.ts";
 
 
 /*
@@ -15,7 +15,7 @@ import {CompoundExpression} from "../template/CompoundExpression.ts";
     Option<FetchClause> fetchClause();
  */
 
-export class SelectExpression extends CompoundExpression {
+export class SelectExpression extends Compound {
     static select = text("select");
 
     constructor(public readonly setQuantifier: SetQuantifier = SetQuantifier.All) {

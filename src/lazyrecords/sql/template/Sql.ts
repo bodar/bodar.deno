@@ -1,14 +1,14 @@
 import {text, Text} from "./Text.ts";
 import {value, Value} from "./Value.ts";
-import {id, Identifier} from "./Identifier.ts";
+import {Identifier} from "./Identifier.ts";
 import {escapeIdentifier, escapeLiteral} from "../ansi/escape.ts";
 import {Expression} from "./Expression.ts";
-import {CompoundExpression} from "./CompoundExpression.ts";
+import {Compound} from "./Compound.ts";
 
 /**
  * A Sql expression.
  */
-export class Sql extends CompoundExpression implements Iterable<Text | Identifier | Value> {
+export class Sql extends Compound implements Iterable<Text | Identifier | Value> {
     constructor(readonly expressions: readonly Expression[]) {
         super(expressions, text(""));
     }
@@ -53,20 +53,3 @@ export function SQL(chunks: TemplateStringsArray, ...values: readonly unknown[])
         }
     })());
 }
-
-
-/**
- * Create multiple Identifiers from an array of strings.
- *
- * With optional separator. Defaults to ', '.
- */
-export function ids(identifiers: readonly string[]): CompoundExpression {
-    return new CompoundExpression(identifiers.map(id), text(', '));
-}
-
-
-export function values(values: unknown[] ): CompoundExpression {
-    return new CompoundExpression(values.map(value), text(', '));
-}
-
-export const spread = values;

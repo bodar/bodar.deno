@@ -1,8 +1,9 @@
 import {assertThat} from "../../../../src/totallylazy/asserts/assertThat.ts";
 import {equals} from "../../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {spread, sql, SQL} from "../../../../src/lazyrecords/sql/template/Sql.ts";
+import {sql, SQL} from "../../../../src/lazyrecords/sql/template/Sql.ts";
 import {text} from "../../../../src/lazyrecords/sql/template/Text.ts";
 import {value} from "../../../../src/lazyrecords/sql/template/Value.ts";
+import {spread} from "../../../../src/lazyrecords/sql/template/Compound.ts";
 
 Deno.test('SQL', async (context) => {
     await context.step('text', function () {
