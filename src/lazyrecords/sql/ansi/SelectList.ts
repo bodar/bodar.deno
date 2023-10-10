@@ -1,9 +1,9 @@
 import {Compound} from "../template/Compound.ts";
-import {DerivedColumn} from "./DerivedColumn.ts";
 import {text} from "../template/Text.ts";
+import {Table} from "./Table.ts";
 
 export class SelectList extends Compound {
-    constructor(public readonly derivedColumns: DerivedColumn[]) {
-        super(derivedColumns, text(", "));
+    constructor(public readonly tables: Table[]) {
+        super(tables, text(", "));
     }
 }

@@ -30,17 +30,34 @@ export class Compound extends Expression implements Iterable<Text | Identifier |
 }
 
 /**
+ * Create a Compound list from an array of Expressions.
+ */
+export function list(expressions: readonly Expression[]): Compound {
+    return new Compound(expressions, text(', '));
+}
+
+/**
  * Create multiple Identifiers from an array of strings.
  *
  * With optional separator. Defaults to ', '.
  */
 export function ids(identifiers: readonly string[]): Compound {
-    return new Compound(identifiers.map(id), text(', '));
+    return list(identifiers.map(id));
 }
 
 
 export function values(values: unknown[] ): Compound {
-    return new Compound(values.map(value), text(', '));
+    return list(values.map(value));
 }
 
 export const spread = values;
+
+
+export function and(...expressions: readonly Expression[]): Compound {
+    return new Compound(expressions, text('and'));
+}
+
+export function or(...expressions: readonly Expression[]): Compound {
+    return new Compound(expressions, text('or'));
+}
+
