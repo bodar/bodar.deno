@@ -65,5 +65,12 @@ export function equal(a: unknown, b: unknown): boolean {
         return equal(Object.entries(a), Object.entries(b));
     }
 
+    if (typeof a == 'function' && typeof b == 'function') {
+        if (a.length != b.length) return false;
+        if (a.name != b.name) return false;
+        if (a.prototype != b.prototype) return false;
+        return a.toString() === b.toString();
+    }
+
     return false;
 }

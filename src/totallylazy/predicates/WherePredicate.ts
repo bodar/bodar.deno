@@ -23,7 +23,8 @@ export interface WherePredicate<A, B> extends Predicate<A> {
 export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): WherePredicate<A, B> {
     return Object.assign((a: A) => predicate(mapper(a)), {
         mapper,
-        predicate
+        predicate,
+        toString: () => `where(${mapper}, ${predicate})`
     });
 }
 
@@ -31,5 +32,5 @@ export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): Wher
  * Checks if the given value is a WherePredicate
  */
 export function isWherePredicate(value: any): value is WherePredicate<any, any> {
-    return value && typeof value === 'function' && value.mapper && value.predicate;
+    return value && typeof value === 'function' && typeof value.mapper === 'function' && typeof value.predicate === 'function';
 }

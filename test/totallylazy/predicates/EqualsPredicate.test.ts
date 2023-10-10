@@ -62,4 +62,10 @@ Deno.test("equal", async (context) => {
         assertFalse(equal({foo: 1, bar: new Set([{ baz: 2}]) }, {foo: 1, bar: new Set([{ baz: 3}]) }));
         assertFalse(equal({foo: 'different', bar: new Set([{ baz: 'different'}]) }, {foo: 1, bar: new Set([{ baz: 2}]) }));
     });
+
+    await context.step("supports Function equality", () => {
+        assertTrue(equal(is(42),is(42)));
+        assertFalse(equal(is(42),is(43)));
+        assertFalse(equal(is(42),is('42')));
+    });
 });
