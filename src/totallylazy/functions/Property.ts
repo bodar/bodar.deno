@@ -14,12 +14,15 @@ export interface Property<A, K extends keyof A> extends Mapper<A, A[K]> {
  * Creates a Property that extracts the value for the given key from an object
  */
 export function property<A, K extends keyof A>(key: K): Property<A, K> {
-    return Object.assign((a: A) => a[key], {
+    return Object.assign(function property(a: A) {
+        return a[key];
+    }, {
         key,
         toString: () => `property('${String(key)}')`
     })
+
 }
 
 export function isProperty(value: any): value is Property<any, any> {
-    return value && typeof value === 'function' && value.key;
+    return value && typeof value === 'function' && value.name === 'property' && Object.hasOwn(value, 'key');
 }
