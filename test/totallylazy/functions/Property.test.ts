@@ -21,7 +21,7 @@ Deno.test("Property", async (context) => {
         assertThat(colour.key, is('colour'));
     });
 
-    await context.step("sets function name", () => {
+    await context.step("has function name", () => {
         assertThat(colour.name, is('property'));
     });
 

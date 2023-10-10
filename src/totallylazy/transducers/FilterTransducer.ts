@@ -15,7 +15,7 @@ export interface FilterTransducer<A> extends Transducer<A, A> {
  * Creates a transducer that filters the given iterable by the given predicate
  */
 export function filter<A>(predicate: Predicate<A>): FilterTransducer<A> {
-    return Object.assign(function* (iterable: Iterable<A>) {
+    return Object.assign(function* filter(iterable: Iterable<A>) {
         for (const a of iterable) {
             if (predicate(a)) yield a;
         }
@@ -23,6 +23,7 @@ export function filter<A>(predicate: Predicate<A>): FilterTransducer<A> {
         predicate,
         toString: () => `filter(${predicate})`
     });
+
 }
 
 /**
@@ -32,5 +33,5 @@ export const accept = filter;
 
 
 export function isFilterTransducer(value: any): value is FilterTransducer<any> {
-    return value && typeof value === 'function' && value.predicate;
+    return value && typeof value === 'function' && value.name === 'filter' && Object.hasOwn(value, 'predicate');
 }
