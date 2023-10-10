@@ -7,6 +7,7 @@ import {column} from "../../../../src/lazyrecords/sql/ansi/Column.ts";
 import {from} from "../../../../src/lazyrecords/sql/ansi/FromClause.ts";
 import {table} from "../../../../src/lazyrecords/sql/ansi/Table.ts";
 import {where} from "../../../../src/lazyrecords/sql/ansi/WhereClause.ts";
+import { qualified } from "../../../../src/lazyrecords/sql/ansi/Qualified.ts";
 
 Deno.test('SelectExpression', async (context) => {
     await context.step('can write in normal SQL order', function () {
@@ -22,5 +23,12 @@ Deno.test('SelectExpression', async (context) => {
             select(distinct, column('name'),
                 from(table('person'))
             )).toString(), equals('select distinct "name" from "person"'));
+    });
+
+    await context.step('can use fully qualified names', function () {
+        assertThat(sql(
+            select(distinct, column(qualified('schema', 'name')),
+                from(table('person'))
+            )).toString(), equals('select distinct "schema"."name" from "person"'));
     });
 });
