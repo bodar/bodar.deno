@@ -4,7 +4,7 @@ import {is} from "../predicates/IsPredicate.ts";
 
 export function assertThat(actual: unknown, predicate: Predicate<any>) {
     if (!predicate(actual)) {
-        throw new AssertionError(`assertThat(${actual}, ${predicate});`);
+        throw new AssertionError(`assertThat(${JSON.stringify(actual)}, ${predicate});`);
     }
 }
 

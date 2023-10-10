@@ -7,15 +7,16 @@ import {column} from "../../../../src/lazyrecords/sql/ansi/Column.ts";
 import {from} from "../../../../src/lazyrecords/sql/ansi/FromClause.ts";
 import {table} from "../../../../src/lazyrecords/sql/ansi/Table.ts";
 import {where} from "../../../../src/lazyrecords/sql/ansi/WhereClause.ts";
-import { qualified } from "../../../../src/lazyrecords/sql/ansi/Qualified.ts";
+import {qualified} from "../../../../src/lazyrecords/sql/ansi/Qualified.ts";
+import {is} from "../../../../src/lazyrecords/sql/ansi/IsExpression.ts";
 
 Deno.test('SelectExpression', async (context) => {
     await context.step('can write in normal SQL order', function () {
         assertThat(sql(
             select(distinct, [column('name').as('n')],
                 from(table('person').as('p')),
-                where(column('age'))
-            )).toString(), equals('select distinct "name" as "n" from "person" as "p" where "age"'));
+                where(column('age'), is(42))
+            )).toString(), equals('select distinct "name" as "n" from "person" as "p" where "age" is 42'));
     });
 
     await context.step('can select a single column', function () {

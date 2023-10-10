@@ -1,6 +1,10 @@
 import {and, Compound, or} from "../template/Compound.ts";
-import {empty, text} from "../template/Text.ts";
-import {Expression} from "../template/Expression.ts";
+import {text} from "../template/Text.ts";
+import {Column} from "./Column.ts";
+
+import {PredicateExpression} from "./PredicateExpression.ts";
+
+export type Predicand = Column;
 
 export class WhereClause extends Compound {
     static where = text("where");
@@ -9,16 +13,21 @@ export class WhereClause extends Compound {
         super([WhereClause.where, expression]);
     }
 
-    and(expression: Compound): WhereClause {
-        return new WhereClause(and(this.expression, expression));
+    and(predicand: Predicand, predicate: PredicateExpression): WhereClause {
+        return new WhereClause(and(this.expression, new PredicatePair(predicand, predicate)));
     }
 
-    or(expression: Compound): WhereClause {
-        return new WhereClause(or(this.expression, expression));
+    or(predicand: Predicand, predicate: PredicateExpression): WhereClause {
+        return new WhereClause(or(this.expression, new PredicatePair(predicand, predicate)));
     }
 }
 
-// TODO: Improve type safety
-export function where(...expressions: readonly Expression[]): WhereClause {
-    return new WhereClause(new Compound(expressions, empty));
+export function where(predicand: Predicand, predicate: PredicateExpression): WhereClause {
+    return new WhereClause(new PredicatePair(predicand, predicate));
+}
+
+class PredicatePair extends Compound {
+    constructor(public readonly predicand: Predicand, public readonly predicate: PredicateExpression) {
+        super([predicand, predicate]);
+    }
 }

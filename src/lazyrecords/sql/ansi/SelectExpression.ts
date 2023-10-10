@@ -2,10 +2,9 @@ import {text} from "../template/Text.ts";
 import {SetQuantifier} from "./SetQuantifier.ts";
 import {Compound, list} from "../template/Compound.ts";
 import {FromClause} from "./FromClause.ts";
-import {Column} from "./Column.ts";
-import {Aliased} from "./Aliased.ts";
 import {WhereClause} from "./WhereClause.ts";
 import {Expression} from "../template/Expression.ts";
+import {ColumnReference} from "./Column.ts";
 
 
 /*
@@ -20,7 +19,6 @@ import {Expression} from "../template/Expression.ts";
     Option<FetchClause> fetchClause();
  */
 
-export type ColumnReference = Column | Aliased<Column>;
 export type SelectList = (ColumnReference)[] | (ColumnReference);
 
 export class SelectExpresssion extends Compound {
