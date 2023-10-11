@@ -63,7 +63,7 @@ Deno.test("equal", async (context) => {
         assertTrue(equal(new Map(), new Map()));
         assertFalse(equal(new Map(), new Map([['a', 1]])));
         assertTrue(equal(new Map([['a', 1]]), new Map([['a', 1]])));
-        assertTrue(equal(new Map([['a', 1]]), new Map([['b', 1]])));
+        assertFalse(equal(new Map([['a', 1]]), new Map([['b', 1]])));
         assertFalse(equal(new Map([['a', 1]]), new Map([['a', '1']])));
     });
 
@@ -86,5 +86,9 @@ Deno.test("equal", async (context) => {
         assertTrue(equal(is(42),is(42)));
         assertFalse(equal(is(42),is(43)));
         assertFalse(equal(is(42),is('42')));
+
+        assertFalse(equal(function (_a:unknown){},function (_a:unknown, _b:unknown){}));
+        assertFalse(equal(function a(_a:unknown){}, function b(_a:unknown){}));
+        assertFalse(equal(function (){}, function (){}));
     });
 });
