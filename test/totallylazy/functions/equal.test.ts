@@ -89,6 +89,7 @@ Deno.test("equal", async (context) => {
 
         assertTrue(equal((x: number) => x % 2 === 0, (x: number) => x % 2 === 0));
         // If 2 identical arrow functions are considered equal, then 2 identical anonymous functions should be too
+        // even though their prototypes are different
         assertTrue(equal(function (){}, function (){}));
         assertFalse(equal(function (_a:unknown){},function (_a:unknown, _b:unknown){}));
         assertFalse(equal(function a(_a:unknown){}, function b(_a:unknown){}));

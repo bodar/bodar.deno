@@ -37,4 +37,16 @@ Deno.test("comparators", async (context) => {
             {make: "Ford", model: "Galaxy", colour: "Red"}
         ]));
     });
+
+    await context.step("works with one", () => {
+        assertThat(comparators(ascending)(0, 0), equals(ascending(0, 0)));
+        assertThat(comparators(ascending)(0, 1), equals(ascending(0, 1)));
+        assertThat(comparators(ascending)(1, 1), equals(ascending(1, 1)));
+        assertThat(comparators(ascending)(1, 0), equals(ascending(1, 0)));
+    });
+
+    await context.step("does nothing with no arguments", () => {
+        const numbers = [4,2,5,1,3];
+        assertThat(numbers.sort(comparators()), equals(numbers));
+    });
 });
