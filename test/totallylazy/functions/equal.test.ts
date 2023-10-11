@@ -63,6 +63,7 @@ Deno.test("equal", async (context) => {
         assertTrue(equal(new Map(), new Map()));
         assertFalse(equal(new Map(), new Map([['a', 1]])));
         assertTrue(equal(new Map([['a', 1]]), new Map([['a', 1]])));
+        assertTrue(equal(new Map([['a', 1]]), new Map([['b', 1]])));
         assertFalse(equal(new Map([['a', 1]]), new Map([['a', '1']])));
     });
 
