@@ -2,14 +2,11 @@
  * Checks if two values are deeply equal by value
  */
 export function equal(a: unknown, b: unknown): boolean {
-    if (Object.is(a, b)) return true;
+    if (a === b) return true;
     if (a === null || b === null) return false;
     if (typeof a !== typeof b) return false;
 
-    if (typeof a == 'number' && typeof b == 'number') {
-        if (a === b) return true;
-        return (a !== a && b !== b);
-    }
+    if (typeof a == 'number' && typeof b == 'number') return a === b || (a !== a && b !== b);
 
     if (typeof a == 'object' && typeof b == 'object') {
         if (a.constructor !== b.constructor) return false;
