@@ -43,7 +43,6 @@ export function equal(a: unknown, b: unknown): boolean {
     if (typeof a == 'function' && typeof b == 'function') {
         if (a.length != b.length) return false;
         if (a.name != b.name) return false;
-        if (a.prototype != b.prototype) return false;
         return a.toString() === b.toString();
     }
 
