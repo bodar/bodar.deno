@@ -66,6 +66,13 @@ Deno.test("equal", async (context) => {
         assertFalse(equal(new Map([['a', 1]]), new Map([['a', '1']])));
     });
 
+    await context.step("supports Sets", () => {
+        assertTrue(equal(new Set(), new Set()));
+        assertFalse(equal(new Set(), new Set(['a'])));
+        assertTrue(equal(new Set(['a']), new Set(['a'])));
+        assertFalse(equal(new Set([1]), new Set(['1'])));
+    });
+
     await context.step("does deep equality", () => {
         assertTrue(equal({foo: 1, bar: { baz: 2} },{foo: 1, bar: { baz: 2} }));
         assertTrue(equal({foo: 1, bar: new Set([{ baz: 2}]) }, {foo: 1, bar: new Set([{ baz: 2}]) }));
