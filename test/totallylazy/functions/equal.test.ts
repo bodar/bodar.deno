@@ -1,17 +1,6 @@
-import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
-import {assertThat, assertTrue, assertFalse} from "../../../src/totallylazy/asserts/assertThat.ts";
+import {assertFalse, assertTrue} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {equal} from "../../../src/totallylazy/functions/equal.ts";
-
-Deno.test("EqualsPredicate", async (context) => {
-    await context.step("is inspectable", () => {
-        assertThat(equals(2).value, is(2));
-    });
-
-    await context.step("is self describing", () => {
-        assertThat(equals(2).toString(), is('equals(2)'));
-    });
-});
+import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 
 Deno.test("equal", async (context) => {
     await context.step("uses Object.is for primitives", () => {
