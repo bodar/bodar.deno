@@ -24,6 +24,7 @@ Deno.test("IsPredicate", async (context) => {
 Deno.test("isIsPredicate", async (context) => {
    await context.step("works", () => {
        assert(isIsPredicate(is(2)));
+       assert(isIsPredicate(is(undefined)));
        assert(!isIsPredicate(() => 'false'));
    });
 });
