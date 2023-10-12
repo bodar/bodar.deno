@@ -1,6 +1,7 @@
 # bodar.deno
 [![bodar](https://circleci.com/gh/bodar/bodar.deno.svg?style=shield)](https://app.circleci.com/pipelines/github/bodar/bodar.deno)
 [![codecov](https://codecov.io/gh/bodar/bodar.deno/graph/badge.svg?token=USVRV8KZ4R)](https://codecov.io/gh/bodar/bodar.deno)
+[![deno land](http://img.shields.io/badge/available%20on-deno.land/x-lightgrey.svg?logo=deno&labelColor=black)](https://deno.land/x/bodar)
 
 Top level tasks
 * [x] Basic structure
