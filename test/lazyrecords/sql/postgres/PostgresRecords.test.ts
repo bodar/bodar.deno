@@ -4,9 +4,9 @@ import {property, Property} from "../../../../src/totallylazy/functions/Property
 import {filter} from "../../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {where} from "../../../../src/totallylazy/predicates/WherePredicate.ts";
 import {is} from "../../../../src/totallylazy/predicates/IsPredicate.ts";
-import {Definition} from "../../../../src/lazyrecords/sql/builder/builders.ts";
+import {definition} from "../../../../src/lazyrecords/sql/builder/builders.ts";
 import {select} from "../../../../src/totallylazy/functions/Select.ts";
-import { map } from "../../../../src/totallylazy/transducers/MapTransducer.ts";
+import {map} from "../../../../src/totallylazy/transducers/MapTransducer.ts";
 
 
 Deno.test({
@@ -29,7 +29,7 @@ Deno.test({
             country_name: string;
         }
 
-        const country: Definition<Country> = {name: "country"};
+        const country = definition<Country>("country");
         const countryCode: Property<Country, 'country_code'> = property("country_code");
 
         await context.step("can get a record by name", async () => {
@@ -43,4 +43,4 @@ Deno.test({
 
         await client.end();
     }
-}, );
+},);
