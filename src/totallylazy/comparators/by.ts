@@ -31,5 +31,5 @@ export function by(mapperOfKey: any, comparator: Comparator<any> = ascending): B
  * Checks if the given value is a ByComparator
  */
 export function isByComparator(value: any): value is ByComparator<any, any> {
-    return value && typeof value === 'function' && value.name === 'by' && typeof value.mapper === 'function' && typeof value.comparator === 'function';
+    return typeof value === 'function' && value.name === 'by' && typeof value.mapper === 'function' && typeof value.comparator === 'function';
 }

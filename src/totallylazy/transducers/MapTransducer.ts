@@ -26,5 +26,5 @@ export function map<A, B>(mapper: Mapper<A, B>): MapTransducer<A, B> {
 }
 
 export function isMapTransducer(value: any): value is MapTransducer<any, any> {
-    return value && typeof value === 'function' && value.name === 'map' && Object.hasOwn(value, 'mapper');
+    return typeof value === 'function' && value.name === 'map' && Object.hasOwn(value, 'mapper');
 }

@@ -33,5 +33,5 @@ export const accept = filter;
 
 
 export function isFilterTransducer(value: any): value is FilterTransducer<any> {
-    return value && typeof value === 'function' && value.name === 'filter' && Object.hasOwn(value, 'predicate');
+    return typeof value === 'function' && value.name === 'filter' && Object.hasOwn(value, 'predicate');
 }

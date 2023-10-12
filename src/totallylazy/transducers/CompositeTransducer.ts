@@ -30,7 +30,7 @@ export function compose(...transducers: readonly Transducer<any, any>[]): Compos
  * Checks if the given value is a CompositeTransducer
  */
 export function isCompositeTransducer(value: any): value is CompositeTransducer<any, any> {
-    return value && typeof value === 'function' && Array.isArray(value.transducers);
+    return typeof value === 'function' && Array.isArray(value.transducers);
 }
 
 /**

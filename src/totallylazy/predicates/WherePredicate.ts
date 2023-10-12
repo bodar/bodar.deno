@@ -32,5 +32,5 @@ export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): Wher
  * Checks if the given value is a WherePredicate
  */
 export function isWherePredicate<A = any, B = any>(value: any): value is WherePredicate<A, B> {
-    return value && typeof value === 'function' && typeof value.mapper === 'function' && typeof value.predicate === 'function';
+    return typeof value === 'function' && typeof value.mapper === 'function' && typeof value.predicate === 'function';
 }
