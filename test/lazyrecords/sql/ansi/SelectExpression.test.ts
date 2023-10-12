@@ -33,12 +33,21 @@ Deno.test('SelectExpression', async (context) => {
             )).toString(), equals('select distinct "schema"."name" from "person"'));
     });
 
-    await context.step('can add additional and clauses', function () {
+    await context.step(`can add additional 'and' clauses`, function () {
         assertThat(sql(
             select(distinct, [column('name').as('n')],
                 from(table('person').as('p')),
                 where(column('age'), is(42))
                     .and(column('weight'), is(100))
             )).toString(), equals('select distinct "name" as "n" from "person" as "p" where ("age" = 42 and "weight" = 100)'));
+    });
+
+    await context.step(`can add additional 'or' clauses`, function () {
+        assertThat(sql(
+            select(distinct, [column('name').as('n')],
+                from(table('person').as('p')),
+                where(column('age'), is(42))
+                    .or(column('weight'), is(100))
+            )).toString(), equals('select distinct "name" as "n" from "person" as "p" where ("age" = 42 or "weight" = 100)'));
     });
 });

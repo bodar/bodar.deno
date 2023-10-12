@@ -8,6 +8,7 @@ import {property, Property} from "../../../../src/totallylazy/functions/Property
 import {map} from "../../../../src/totallylazy/transducers/MapTransducer.ts";
 import {select} from "../../../../src/totallylazy/functions/Select.ts";
 import { and } from "../../../../src/totallylazy/predicates/AndPredicate.ts";
+import { or } from "../../../../src/totallylazy/predicates/OrPredicate.ts";
 
 
 interface Country {
@@ -43,5 +44,10 @@ Deno.test("selectExpression", async (context) => {
     await context.step("supports 'and' predicates", () => {
         assertThat(sql(toSelect(country, filter(and(where(countryCode, is("GB")), where(countryName, is("United Kingdom")))))).toString(),
             is(`select all * from "country" where ("country_code" = 'GB' and "country_name" = 'United Kingdom')`));
+    });
+
+    await context.step("supports 'or' predicates", () => {
+        assertThat(sql(toSelect(country, filter(or(where(countryCode, is("GB")), where(countryName, is("United Kingdom")))))).toString(),
+            is(`select all * from "country" where ("country_code" = 'GB' or "country_name" = 'United Kingdom')`));
     });
 });

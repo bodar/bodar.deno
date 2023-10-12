@@ -16,7 +16,8 @@ import {isIsPredicate} from "../../../totallylazy/predicates/IsPredicate.ts";
 import {is} from "../ansi/IsExpression.ts";
 import {Predicate} from "../../../totallylazy/predicates/Predicate.ts";
 import {isAndPredicate} from "../../../totallylazy/predicates/AndPredicate.ts";
-import {and} from "../template/Compound.ts";
+import {and, or} from "../template/Compound.ts";
+import {isOrPredicate} from "../../../totallylazy/predicates/OrPredicate.ts";
 
 export interface Definition<A> {
     name: string;
@@ -77,6 +78,9 @@ export function toWhereClause<A>(predicate: Predicate<A>): WhereClause {
     }
     if (isAndPredicate(predicate)) {
         return new WhereClause(and(...predicate.predicates.map(toPredicatePair)));
+    }
+    if (isOrPredicate(predicate)) {
+        return new WhereClause(or(...predicate.predicates.map(toPredicatePair)));
     }
     throw new Error(`Unsupported Predicate: ${predicate}`);
 }
