@@ -54,10 +54,10 @@ export const spread = values;
 
 
 export function and(...expressions: readonly Expression[]): Compound {
-    return new Compound(expressions, text('and'), text('('), text(')'));
+    return new Compound(expressions, text(' and '), text('('), text(')'));
 }
 
 export function or(...expressions: readonly Expression[]): Compound {
-    return new Compound(expressions, text('or'), text('('), text(')'));
+    return new Compound(expressions, text(' or '), text('('), text(')'));
 }
 

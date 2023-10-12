@@ -26,7 +26,7 @@ export function where(predicand: Predicand, predicate: PredicateExpression): Whe
     return new WhereClause(new PredicatePair(predicand, predicate));
 }
 
-class PredicatePair extends Compound {
+export class PredicatePair extends Compound {
     constructor(public readonly predicand: Predicand, public readonly predicate: PredicateExpression) {
         super([predicand, predicate]);
     }
