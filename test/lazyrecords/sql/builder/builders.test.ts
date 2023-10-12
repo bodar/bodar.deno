@@ -16,7 +16,6 @@ interface Country {
 const country = definition<Country>("country");
 const countryCode: Property<Country, 'country_code'> = property("country_code");
 
-
 Deno.test("selectExpression", async (context) => {
     await context.step("works with just the definition", () => {
         assertThat(sql(selectExpression(country)).toString(),
@@ -31,5 +30,10 @@ Deno.test("selectExpression", async (context) => {
     await context.step("can map with select", () => {
         assertThat(sql(selectExpression(country, map(select(countryCode)))).toString(),
             is(`select all "country_code" from "country"`));
+    });
+
+    await context.step("can combine", () => {
+        assertThat(sql(selectExpression(country, filter(where(countryCode, is("GB"))), map(select(countryCode)))).toString(),
+            is(`select all "country_code" from "country" where "country_code" = 'GB'`));
     });
 });

@@ -23,6 +23,6 @@ export function property<A, K extends keyof A>(key: K): Property<A, K> {
 
 }
 
-export function isProperty(value: any): value is Property<any, any> {
+export function isProperty<A = any, B extends keyof A = any>(value: any): value is Property<A, B> {
     return value && typeof value === 'function' && value.name === 'property' && Object.hasOwn(value, 'key');
 }

@@ -26,6 +26,6 @@ export function is<A>(value: A): IsPredicate<A> {
 /**
  * Checks if the given value is an IsPredicate
  */
-export function isIsPredicate(value: any): value is IsPredicate<any> {
+export function isIsPredicate<A = any>(value: any): value is IsPredicate<A> {
     return value && typeof value === 'function' && value.name === 'is' && Object.hasOwn(value, 'value');
 }

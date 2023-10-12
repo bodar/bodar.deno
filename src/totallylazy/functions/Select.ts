@@ -28,6 +28,6 @@ export function select<A>(...properties: readonly (Property<A, keyof A> | keyof 
     });
 }
 
-export function isSelect(value: any): value is Select<any> {
+export function isSelect<A = any>(value: any): value is Select<A> {
     return value && typeof value === 'function' && value.name === 'select' && Object.hasOwn(value, 'properties');
 }
