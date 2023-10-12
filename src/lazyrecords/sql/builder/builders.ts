@@ -25,7 +25,7 @@ export function fromClause<A>(definition: Definition<A>): FromClause {
     return from(table(definition.name));
 }
 
-export function selectExpression(definition: Definition<any>, ...transducers: readonly Transducer<any, any>[]): SelectExpression {
+export function selectExpression(definition: Definition<unknown>, ...transducers: readonly Transducer<unknown, unknown>[]): SelectExpression {
     return transducers.reduce((expression, transducer) => {
         if (isMapTransducer(transducer)) {
             return select(expression.setQuantifier, selectList(transducer.mapper), expression.fromClause, expression.whereClause);
@@ -38,7 +38,7 @@ export function selectExpression(definition: Definition<any>, ...transducers: re
     }, select(SetQuantifier.All, star, fromClause(definition)));
 }
 
-export function selectList(mapper: Mapper<any, any>): SelectList {
+export function selectList(mapper: Mapper<unknown, unknown>): SelectList {
     if (isSelect(mapper)) {
         return mapper.properties.map(toColumn);
     }
@@ -49,14 +49,14 @@ export function toColumn(property: Property<any, any>): Column {
     return column(String(property.key));
 }
 
-export function whereClause(predicate: Predicate<any>): WhereClause {
+export function whereClause(predicate: Predicate<unknown>): WhereClause {
     if (isWherePredicate(predicate) && isProperty(predicate.mapper)) {
         return where(toColumn(predicate.mapper), predicateExpression(predicate.predicate))
     }
     throw new Error(`Unsupported Predicate: ${predicate}`);
 }
 
-export function predicateExpression(predicate: Predicate<any>): PredicateExpression {
+export function predicateExpression(predicate: Predicate<unknown>): PredicateExpression {
     if (isIsPredicate(predicate)) {
         return is(predicate.value);
     }
