@@ -16,7 +16,7 @@ Deno.test('SelectExpression', async (context) => {
             select(distinct, [column('name').as('n')],
                 from(table('person').as('p')),
                 where(column('age'), is(42))
-            )).toString(), equals('select distinct "name" as "n" from "person" as "p" where "age" is 42'));
+            )).toString(), equals('select distinct "name" as "n" from "person" as "p" where "age" = 42'));
     });
 
     await context.step('can select a single column', function () {

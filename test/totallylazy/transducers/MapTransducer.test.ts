@@ -1,6 +1,6 @@
 import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {map} from "../../../src/totallylazy/transducers/MapTransducer.ts";
+import {map, isMapTransducer} from "../../../src/totallylazy/transducers/MapTransducer.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 
 Deno.test("MapTransducer", async (context) => {
@@ -16,5 +16,12 @@ Deno.test("MapTransducer", async (context) => {
 
     await context.step("is self describing", () => {
         assertThat(transducer.toString(), is(`map(${String})`));
+    });
+});
+
+Deno.test("isMapTransducer", async (context) => {
+    await context.step("works", () => {
+        assertThat(isMapTransducer(map(String)), is(true));
+        assertThat(isMapTransducer(() => 'false'), is(false));
     });
 });

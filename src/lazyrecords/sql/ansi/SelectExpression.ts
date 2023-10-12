@@ -21,14 +21,14 @@ import {ColumnReference} from "./Column.ts";
 
 export type SelectList = (ColumnReference)[] | (ColumnReference);
 
-export class SelectExpresssion extends Compound {
+export class SelectExpression extends Compound {
     static select = text("select");
 
     constructor(public readonly setQuantifier: SetQuantifier,
                 public readonly selectList: SelectList,
                 public readonly fromClause: FromClause,
                 public readonly whereClause?: WhereClause) {
-        super([SelectExpresssion.select,
+        super([SelectExpression.select,
             setQuantifier,
             Array.isArray(selectList) ? list(selectList) : selectList,
             fromClause,
@@ -40,7 +40,7 @@ export class SelectExpresssion extends Compound {
 export function select(setQuantifier: SetQuantifier,
                        selectList: SelectList,
                        fromClause: FromClause,
-                       whereClause?: WhereClause): SelectExpresssion {
-    return new SelectExpresssion(setQuantifier, selectList, fromClause, whereClause);
+                       whereClause?: WhereClause): SelectExpression {
+    return new SelectExpression(setQuantifier, selectList, fromClause, whereClause);
 }
 

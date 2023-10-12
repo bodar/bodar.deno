@@ -1,9 +1,12 @@
 import {Client} from "https://deno.land/x/postgres@v0.17.0/mod.ts";
-import {Definition, PostgresRecords} from "../../../../src/lazyrecords/sql/postgres/PostgresRecords.ts";
+import {PostgresRecords} from "../../../../src/lazyrecords/sql/postgres/PostgresRecords.ts";
 import {property, Property} from "../../../../src/totallylazy/functions/Property.ts";
 import {filter} from "../../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {where} from "../../../../src/totallylazy/predicates/WherePredicate.ts";
 import {is} from "../../../../src/totallylazy/predicates/IsPredicate.ts";
+import {Definition} from "../../../../src/lazyrecords/sql/builder/builders.ts";
+import {select} from "../../../../src/totallylazy/functions/Select.ts";
+import { map } from "../../../../src/totallylazy/transducers/MapTransducer.ts";
 
 
 Deno.test({
@@ -30,7 +33,10 @@ Deno.test({
         const countryCode: Property<Country, 'country_code'> = property("country_code");
 
         await context.step("can get a record by name", async () => {
-            const record = await records.get(country, filter(where(countryCode, is("GB"))));
+            const record = await records.get(country,
+                filter(where(countryCode, is("GB"))),
+                map(select(countryCode))
+            );
             console.log(Array.from(record));
         });
 
