@@ -1,9 +1,6 @@
 import {Predicate} from "./Predicate.ts";
 import {Mapper} from "../functions/Mapper.ts";
 import {logical, LogicalPredicate} from "./LogicalPredicate.ts";
-import {and} from "./AndPredicate.ts";
-import {or} from "./OrPredicate.ts";
-import {not} from "./NotPredicate.ts";
 
 
 /**
