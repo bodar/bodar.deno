@@ -1,14 +1,22 @@
 import {Predicate} from "./Predicate.ts";
+import {alwaysFalse, alwaysTrue} from "../functions/constant.ts";
 
 export interface AndPredicate<A> extends Predicate<A> {
     readonly predicates: readonly Predicate<A>[]
 }
 
-export function and<A>(...predicates: readonly Predicate<A>[]): AndPredicate<A> {
+export function and<A>(): typeof alwaysTrue;
+export function and<P extends Predicate<any>>(predicate: P): P;
+export function and<A>(...predicates: readonly Predicate<A>[]): AndPredicate<A>;
+export function and<A>(...predicates: readonly Predicate<A>[]): Predicate<A> {
+    if (predicates.some(p => p === alwaysFalse)) return alwaysFalse;
+    const compact = predicates.filter(p => p !== alwaysTrue);
+    if (compact.length === 0) return alwaysTrue;
+    if (compact.length === 1) return predicates[0];
     return Object.assign(function and(a: A) {
-        return predicates.every(p => p(a));
+        return compact.every(p => p(a));
     }, {
-        predicates,
+        predicates: compact,
         toString: () => `and(${predicates.join(', ')})`
     });
 }

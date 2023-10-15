@@ -8,10 +8,10 @@ export function assertThat(actual: unknown, predicate: Predicate<any>) {
     }
 }
 
-export function assertTrue(value: boolean) {
+export function assertTrue(value: boolean): asserts value is true {
     assertThat(value, is(true));
 }
 
-export function assertFalse(value: boolean) {
+export function assertFalse(value: boolean): asserts value is false {
     assertThat(value, is(false));
 }
