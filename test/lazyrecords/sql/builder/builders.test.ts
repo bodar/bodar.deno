@@ -55,4 +55,14 @@ Deno.test("selectExpression", async (context) => {
         assertThat(sql(toSelect(country, filter(where(countryCode, is("GB"))), filter(where(countryName, is("United Kingdom"))))).toString(),
             is(`select all * from "country" where ("country_code" = 'GB' and "country_name" = 'United Kingdom')`));
     });
+
+    await context.step("can also write 'and' in infix style", () => {
+        assertThat(sql(toSelect(country, filter(where(countryCode, is("GB")).and(where(countryName, is("United Kingdom")))))).toString(),
+            is(`select all * from "country" where ("country_code" = 'GB' and "country_name" = 'United Kingdom')`));
+    });
+
+    await context.step("can also write 'or' in infix style", () => {
+        assertThat(sql(toSelect(country, filter(where(countryCode, is("GB")).or(where(countryName, is("United Kingdom")))))).toString(),
+            is(`select all * from "country" where ("country_code" = 'GB' or "country_name" = 'United Kingdom')`));
+    });
 });
