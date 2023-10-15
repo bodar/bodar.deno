@@ -61,3 +61,8 @@ export function or(...expressions: readonly Expression[]): Compound {
     return new Compound(expressions, text(' or '), text('('), text(')'));
 }
 
+export function not(expression: Expression): Compound {
+    return new Compound([expression], empty, text('not ( '), text(' )'));
+}
+
+

@@ -1,6 +1,7 @@
 import {Predicate} from "./Predicate.ts";
 import {Mapper} from "../functions/Mapper.ts";
 import {logical, LogicalPredicate} from "./LogicalPredicate.ts";
+import {isNotPredicate, not, NotPredicate} from "./NotPredicate.ts";
 
 
 /**
@@ -21,7 +22,10 @@ export interface WherePredicate<A, B> extends LogicalPredicate<A> {
 /**
  * Creates a predicate that checks if the value extracted from <A> by the given mapper passes the given predicate
  */
-export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): WherePredicate<A, B> {
+export function where<A, B>(mapper: Mapper<A, B>, predicate: NotPredicate<B>): NotPredicate<A> ;
+export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): WherePredicate<A, B> ;
+export function where<A, B>(mapper: Mapper<A, B>, predicate: Predicate<B>): Predicate<A> {
+    if (isNotPredicate(predicate)) return not(where(mapper, predicate.predicate));
     return Object.assign(logical(function where(a: A) {
         return predicate(mapper(a));
     }), {

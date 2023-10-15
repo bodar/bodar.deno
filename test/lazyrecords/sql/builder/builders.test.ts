@@ -2,13 +2,14 @@ import {is} from "../../../../src/totallylazy/predicates/IsPredicate.ts";
 import {assertThat} from "../../../../src/totallylazy/asserts/assertThat.ts";
 import {definition, toSelect} from "../../../../src/lazyrecords/sql/builder/builders.ts";
 import {sql} from "../../../../src/lazyrecords/sql/template/Sql.ts";
-import {filter} from "../../../../src/totallylazy/transducers/FilterTransducer.ts";
+import {accept, filter, reject} from "../../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {where} from "../../../../src/totallylazy/predicates/WherePredicate.ts";
 import {property} from "../../../../src/totallylazy/functions/Property.ts";
 import {map} from "../../../../src/totallylazy/transducers/MapTransducer.ts";
 import {select} from "../../../../src/totallylazy/functions/Select.ts";
 import { and } from "../../../../src/totallylazy/predicates/AndPredicate.ts";
 import { or } from "../../../../src/totallylazy/predicates/OrPredicate.ts";
+import {not} from "../../../../src/totallylazy/predicates/NotPredicate.ts";
 
 
 interface Country {
@@ -77,4 +78,25 @@ Deno.test("selectExpression", async (context) => {
         assertThat(sql(toSelect(country, filter(where(optional, is<string|undefined>(undefined))))).toString(),
             is(`select all * from "country" where "optional" is null`));
     });
+
+    await context.step("can negate a predicate inside the where", () => {
+        assertThat(sql(toSelect(country, filter(where(countryCode, not(is("GB")))))).toString(),
+            is(`select all * from "country" where not ( "country_code" = 'GB' )`));
+    });
+
+    await context.step("can negate a predicate outside the where", () => {
+        assertThat(sql(toSelect(country, filter(not(where(countryCode, is("GB")))))).toString(),
+            is(`select all * from "country" where not ( "country_code" = 'GB' )`));
+    });
+
+    await context.step("also works with accept", () => {
+        assertThat(sql(toSelect(country, accept(where(countryCode, is("GB"))))).toString(),
+            is(`select all * from "country" where "country_code" = 'GB'`));
+    });
+
+    await context.step("also works with reject", () => {
+        assertThat(sql(toSelect(country, reject(where(countryCode, is("GB"))))).toString(),
+            is(`select all * from "country" where not ( "country_code" = 'GB' )`));
+    });
+
 });

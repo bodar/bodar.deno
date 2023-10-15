@@ -11,13 +11,13 @@ import {isSelect} from "../../../totallylazy/functions/Select.ts";
 import {Column, column, star} from "../ansi/Column.ts";
 import {isWherePredicate} from "../../../totallylazy/predicates/WherePredicate.ts";
 import {isProperty, Property} from "../../../totallylazy/functions/Property.ts";
-import {PredicateExpression} from "../ansi/PredicateExpression.ts";
 import {isIsPredicate} from "../../../totallylazy/predicates/IsPredicate.ts";
 import {is} from "../ansi/IsExpression.ts";
 import {Predicate} from "../../../totallylazy/predicates/Predicate.ts";
 import {isAndPredicate} from "../../../totallylazy/predicates/AndPredicate.ts";
-import {and, or} from "../template/Compound.ts";
+import {and, Compound, not, or} from "../template/Compound.ts";
 import {isOrPredicate} from "../../../totallylazy/predicates/OrPredicate.ts";
+import {isNotPredicate} from "../../../totallylazy/predicates/NotPredicate.ts";
 
 export interface Definition<A> {
     name: string;
@@ -44,7 +44,7 @@ export function toSelect<A>(definition: Definition<A>, ...transducers: readonly 
             return select(expression.setQuantifier, toSelectList(transducer.mapper), expression.fromClause, expression.whereClause);
         }
         if (isFilterTransducer(transducer)) {
-            return select(expression.setQuantifier, expression.selectList, expression.fromClause, mergeWhereClause(expression.whereClause, toWhereClause(transducer.predicate)));
+            return select(expression.setQuantifier, expression.selectList, expression.fromClause, mergeWhereClause(expression.whereClause, toCompound(transducer.predicate)));
         }
 
         return expression;
@@ -73,34 +73,26 @@ export function toPredicand<A>(mapper: Mapper<A, keyof A>): Predicand {
     throw new Error(`Unsupported Mapper: ${mapper}`);
 }
 
-function mergeWhereClause(oldClause: WhereClause | undefined, newClause: WhereClause): WhereClause {
-    if (!oldClause) return newClause;
-    return new WhereClause(and(oldClause.expression, newClause.expression));
+function mergeWhereClause(oldClause: WhereClause | undefined, newCompound: Compound): WhereClause {
+    if (!oldClause) return new WhereClause(newCompound);
+    return new WhereClause(and(oldClause.expression, newCompound));
 }
 
-export function toWhereClause<A>(predicate: Predicate<A>): WhereClause {
+export function toCompound<A>(predicate: Predicate<A>): Compound {
     if (isWherePredicate(predicate)) {
-        return new WhereClause(toPredicatePair(predicate));
+        return new PredicatePair(toPredicand(predicate.mapper), toCompound(predicate.predicate));
     }
     if (isAndPredicate(predicate)) {
-        return new WhereClause(and(...predicate.predicates.map(toPredicatePair)));
+        return and(...predicate.predicates.map(toCompound));
     }
     if (isOrPredicate(predicate)) {
-        return new WhereClause(or(...predicate.predicates.map(toPredicatePair)));
+        return or(...predicate.predicates.map(toCompound));
     }
-    throw new Error(`Unsupported Predicate: ${predicate}`);
-}
-
-export function toPredicatePair<A>(predicate: Predicate<A>): PredicatePair {
-    if (isWherePredicate(predicate)) {
-        return new PredicatePair(toPredicand(predicate.mapper), toPredicateExpression(predicate.predicate));
-    }
-    throw new Error(`Unsupported Predicate: ${predicate}`);
-}
-
-export function toPredicateExpression<A>(predicate: Predicate<A>): PredicateExpression {
     if (isIsPredicate(predicate)) {
         return is(predicate.value);
+    }
+    if (isNotPredicate(predicate)) {
+        return not(toCompound(predicate.predicate));
     }
     throw new Error(`Unsupported Predicate: ${predicate}`);
 }

@@ -1,3 +1,4 @@
+import { not } from "../predicates/NotPredicate.ts";
 import {Predicate} from "../predicates/Predicate.ts";
 import {Transducer} from "./Transducer.ts";
 
@@ -30,6 +31,14 @@ export function filter<A>(predicate: Predicate<A>): FilterTransducer<A> {
  * Alias for filter (inspired by ruby)
  */
 export const accept = filter;
+
+/**
+ * Alias for not filter  (inspired by ruby)
+ */
+export function reject<A>(predicate: Predicate<A>) {
+    return filter(not(predicate));
+}
+
 
 
 export function isFilterTransducer(value: any): value is FilterTransducer<any> {
