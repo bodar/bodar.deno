@@ -17,8 +17,8 @@ interface Country {
 }
 
 const country = definition<Country>("country");
-const countryCode: Property<Country, 'country_code'> = property("country_code");
-const countryName: Property<Country, 'country_name'> = property("country_name");
+const countryCode = property<Country, 'country_code'>("country_code");
+const countryName = property<Country, 'country_name'>("country_name");
 
 Deno.test("selectExpression", async (context) => {
     await context.step("works with just the definition", () => {
@@ -49,5 +49,10 @@ Deno.test("selectExpression", async (context) => {
     await context.step("supports 'or' predicates", () => {
         assertThat(sql(toSelect(country, filter(or(where(countryCode, is("GB")), where(countryName, is("United Kingdom")))))).toString(),
             is(`select all * from "country" where ("country_code" = 'GB' or "country_name" = 'United Kingdom')`));
+    });
+
+    await context.step("'and' can be also just be written with multiple filters", () => {
+        assertThat(sql(toSelect(country, filter(where(countryCode, is("GB"))), filter(where(countryName, is("United Kingdom"))))).toString(),
+            is(`select all * from "country" where ("country_code" = 'GB' and "country_name" = 'United Kingdom')`));
     });
 });

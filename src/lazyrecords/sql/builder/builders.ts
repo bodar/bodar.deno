@@ -37,13 +37,14 @@ export function toSelect<A, B, C, D>(definition: Definition<A>, b: Transducer<A,
 export function toSelect<A, B, C, D, E>(definition: Definition<A>, b: Transducer<A, B> & Supported<A>, c: Transducer<B, C> & Supported<B>, d: Transducer<C, D> & Supported<C>, e: Transducer<D, E> & Supported<D>): SelectExpression;
 export function toSelect<A, B, C, D, E, F>(definition: Definition<A>, b: Transducer<A, B> & Supported<A>, c: Transducer<B, C> & Supported<B>, d: Transducer<C, D> & Supported<C>, e: Transducer<D, E> & Supported<D>, f: Transducer<E, F> & Supported<E>): SelectExpression;
 export function toSelect<A>(definition: Definition<A>, ...transducers: readonly Supported<A>[]): SelectExpression ;
+
 export function toSelect<A>(definition: Definition<A>, ...transducers: readonly Supported<A>[]): SelectExpression {
     return transducers.reduce((expression, transducer) => {
         if (isMapTransducer(transducer)) {
             return select(expression.setQuantifier, toSelectList(transducer.mapper), expression.fromClause, expression.whereClause);
         }
         if (isFilterTransducer(transducer)) {
-            return select(expression.setQuantifier, expression.selectList, expression.fromClause, toWhereClause(transducer.predicate));
+            return select(expression.setQuantifier, expression.selectList, expression.fromClause, mergeWhereClause(expression.whereClause, toWhereClause(transducer.predicate)));
         }
 
         return expression;
@@ -70,6 +71,11 @@ export function toPredicand<A>(mapper: Mapper<A, keyof A>): Predicand {
         return toColumn(mapper);
     }
     throw new Error(`Unsupported Mapper: ${mapper}`);
+}
+
+function mergeWhereClause(oldClause: WhereClause | undefined, newClause: WhereClause): WhereClause {
+    if (!oldClause) return newClause;
+    return new WhereClause(and(oldClause.expression, newClause.expression));
 }
 
 export function toWhereClause<A>(predicate: Predicate<A>): WhereClause {
