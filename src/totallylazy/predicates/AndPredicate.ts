@@ -31,5 +31,3 @@ export function and<A>(...predicates: readonly Predicate<A>[]): Predicate<A> {
 export function isAndPredicate<A = any>(value: any): value is AndPredicate<A> {
     return typeof value === 'function' && value.name === 'and' && Array.isArray(value.predicates);
 }
-
-type t = Record<string, number>
