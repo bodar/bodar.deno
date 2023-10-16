@@ -17,6 +17,6 @@ export function isConstant<T = any>(value: any): value is Constant<T> {
     return typeof value === 'function' && value.name === 'constant' && Object.hasOwn(value, 'value');
 }
 
-export const alwaysTrue = constant(true);
+export const alwaysTrue: Constant<true> = constant(true);
 
-export const alwaysFalse = constant(false);
+export const alwaysFalse: Constant<false> = constant(false);
