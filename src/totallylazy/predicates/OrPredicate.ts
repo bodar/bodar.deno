@@ -2,7 +2,7 @@ import {Predicate} from "./Predicate.ts";
 import {alwaysFalse, alwaysTrue} from "../functions/constant.ts";
 import {isNotPredicate, not, NotPredicate} from "./NotPredicate.ts";
 import {ReadonlyArrayContains} from "../collections/Array.ts";
-import {and, AndPredicate} from "./AndPredicate.ts";
+import {and} from "./AndPredicate.ts";
 
 export interface OrPredicate<A> extends Predicate<A> {
     readonly predicates: readonly Predicate<A>[]
@@ -12,17 +12,19 @@ export function or<A>(): typeof alwaysTrue;
 export function or<P extends Predicate<any>>(predicate: P): P;
 export function or<A>(...predicates: readonly NotPredicate<A>[]): NotPredicate<A>;
 export function or<A>(...predicates: ReadonlyArrayContains<Predicate<A>, typeof alwaysTrue>): typeof alwaysTrue;
-export function or<A>(...predicates: readonly Predicate<A>[]): AndPredicate<A>;
-export function or<A>(...predicates: readonly Predicate<A>[]): Predicate<A> {
+export function or<A>(...predicates: readonly Predicate<A>[]): OrPredicate<A>;
+export function or<A>(...original: readonly Predicate<A>[]): Predicate<A> {
+    const predicates = original
+        .flatMap(p => isOrPredicate(p) ? p.predicates : [p])
+        .filter(p => p !== alwaysFalse);
     if (predicates.some(p => p === alwaysTrue)) return alwaysTrue;
-    const compact = predicates.filter(p => p !== alwaysFalse);
-    if (compact.length === 0) return alwaysFalse;
-    if (compact.length === 1) return predicates[0];
-    if (compact.every(isNotPredicate)) return not(and(...compact.map(p => p.predicate)));
+    if (predicates.length === 0) return alwaysFalse;
+    if (predicates.length === 1) return predicates[0];
+    if (predicates.every(isNotPredicate)) return not(and(...predicates.map(p => p.predicate)));
     return Object.assign(function or(a: A) {
         return predicates.some(p => p(a));
     }, {
-        predicates:compact,
+        predicates,
         toString: () => `or(${predicates.join(', ')})`
     });
 }

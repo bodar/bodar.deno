@@ -16,6 +16,5 @@ export function logical<A>(predicate: Predicate<A>): LogicalPredicate<A> {
         and: (other: Predicate<A>) => logical(and(predicate, other)),
         or: (other: Predicate<A>) => logical(or(predicate, other)),
         not: () => logical(not(predicate)),
-        toString: () => predicate.toString()
     });
 }

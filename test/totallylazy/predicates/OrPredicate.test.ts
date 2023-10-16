@@ -42,6 +42,11 @@ Deno.test("OrPredicate", async (context) => {
         assertThat(orPredicate, equals(not(and(is(2), is(3)))));
     });
 
+    await context.step("collapses nested 'or' predicates", () => {
+        const andPredicate = or(is(2), or(is(3), or(is(4), is(5))));
+        assertThat(andPredicate, equals(or(is(2), is(3), is(4), is(5))));
+    });
+
     await context.step("is inspectable", () => {
         const other = is(2);
         assertThat(or(even, other).predicates, equals([even, other]));

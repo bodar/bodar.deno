@@ -41,6 +41,11 @@ Deno.test("AndPredicate", async (context) => {
         assertThat(andPredicate, equals(not(or(is(2), is(3)))));
     });
 
+    await context.step("collapses nested 'and' predicates", () => {
+        const andPredicate = and(is(2), and(is(3), and(is(4), is(5))));
+        assertThat(andPredicate, equals(and(is(2), is(3), is(4), is(5))));
+    });
+
     await context.step("is inspectable", () => {
         const other = is(2);
         assertThat(and(even, other).predicates, equals([even, other]));
