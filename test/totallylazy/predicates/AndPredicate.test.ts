@@ -3,6 +3,8 @@ import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {assertFalse, assertThat, assertTrue} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {and, isAndPredicate} from "../../../src/totallylazy/predicates/AndPredicate.ts";
 import {alwaysFalse, alwaysTrue} from "../../../src/totallylazy/functions/constant.ts";
+import {not} from "../../../src/totallylazy/predicates/NotPredicate.ts";
+import {or} from "../../../src/totallylazy/predicates/OrPredicate.ts";
 
 const even = (x: number) => x % 2 === 0;
 
@@ -32,6 +34,11 @@ Deno.test("AndPredicate", async (context) => {
         const other = is(2);
         const andPredicate = and(alwaysFalse, other);
         assertThat(andPredicate, is(alwaysFalse));
+    });
+
+    await context.step("uses De Morgan's law to ensure 'not' is always on the outside", () => {
+        const andPredicate = and(not(is(2)), not(is(3)));
+        assertThat(andPredicate, equals(not(or(is(2), is(3)))));
     });
 
     await context.step("is inspectable", () => {
