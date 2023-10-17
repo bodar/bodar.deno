@@ -15,9 +15,10 @@ import {isIsPredicate} from "../../../totallylazy/predicates/IsPredicate.ts";
 import {is} from "../ansi/IsExpression.ts";
 import {Predicate} from "../../../totallylazy/predicates/Predicate.ts";
 import {isAndPredicate} from "../../../totallylazy/predicates/AndPredicate.ts";
-import {and, Compound, not, or} from "../template/Compound.ts";
+import {and, between, Compound, not, or} from "../template/Compound.ts";
 import {isOrPredicate} from "../../../totallylazy/predicates/OrPredicate.ts";
 import {isNotPredicate} from "../../../totallylazy/predicates/NotPredicate.ts";
+import { isBetweenPredicate } from "../../../totallylazy/predicates/BetweenPredicate.ts";
 
 export interface Definition<A> {
     name: string;
@@ -88,11 +89,14 @@ export function toCompound<A>(predicate: Predicate<A>): Compound {
     if (isOrPredicate(predicate)) {
         return or(...predicate.predicates.map(toCompound));
     }
+    if (isNotPredicate(predicate)) {
+        return not(toCompound(predicate.predicate));
+    }
     if (isIsPredicate(predicate)) {
         return is(predicate.value);
     }
-    if (isNotPredicate(predicate)) {
-        return not(toCompound(predicate.predicate));
+    if (isBetweenPredicate(predicate)) {
+        return between(predicate.start, predicate.end);
     }
     throw new Error(`Unsupported Predicate: ${predicate}`);
 }

@@ -7,21 +7,24 @@ import {where} from "../../../../src/totallylazy/predicates/WherePredicate.ts";
 import {property} from "../../../../src/totallylazy/functions/Property.ts";
 import {map} from "../../../../src/totallylazy/transducers/MapTransducer.ts";
 import {select} from "../../../../src/totallylazy/functions/Select.ts";
-import { and } from "../../../../src/totallylazy/predicates/AndPredicate.ts";
-import { or } from "../../../../src/totallylazy/predicates/OrPredicate.ts";
+import {and} from "../../../../src/totallylazy/predicates/AndPredicate.ts";
+import {or} from "../../../../src/totallylazy/predicates/OrPredicate.ts";
 import {not} from "../../../../src/totallylazy/predicates/NotPredicate.ts";
+import {between} from "../../../../src/totallylazy/predicates/BetweenPredicate.ts";
 
 
 interface Country {
     country_code: string;
     country_name: string;
     optional?: string;
+    age: number;
 }
 
 const country = definition<Country>("country");
 const countryCode = property<Country, 'country_code'>("country_code");
 const countryName = property<Country, 'country_name'>("country_name");
 const optional = property<Country, 'optional'>("optional");
+const age = property<Country, 'age'>("age");
 
 Deno.test("selectExpression", async (context) => {
     await context.step("works with just the definition", () => {
@@ -99,4 +102,8 @@ Deno.test("selectExpression", async (context) => {
             is(`select all * from "country" where not ( "country_code" = 'GB' )`));
     });
 
+    await context.step("supports between", () => {
+        assertThat(sql(toSelect(country, filter(where(age, between(5, 10))))).toString(),
+            is(`select all * from "country" where "age" between 5 and 10`));
+    });
 });
