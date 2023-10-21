@@ -11,15 +11,31 @@ export function toArray<T>(segment: Segment<T>): T[] {
     return Array.from(iterable(segment));
 }
 
-export function fromArray<T>(array: readonly T[]): Segment<T> {
-    if (array.length === 0) return emptySegment;
-    if (array.length === 1) return segment(array[0]);
-    return segment(array[0], fromArray(array.slice(1)));
+export function toString(segment: Segment<unknown>): string {
+    if (segment.head === undefined) return 'segment()';
+    if (segment.tail === undefined) return `segment(${segment.head})`;
+    return `segment(${segment.head}, ${toString(segment.tail)})`
 }
 
-export const emptySegment: Segment<never> = {
-    head: undefined,
-    tail: undefined,
+export function fromArray<T>(array: SliceableArray<T>): Segment<T> {
+    return new ArraySegment(array);
+}
+
+export interface SliceableArray<T> extends ArrayLike<T> {
+    slice(start: number): SliceableArray<T>;
+}
+
+export class ArraySegment<T> implements Segment<T> {
+    constructor(private array: SliceableArray<T>) {
+    }
+
+    get head(): T | undefined {
+        return this.array[0];
+    }
+
+    get tail(): Segment<T> | undefined {
+        return this.array.length > 1 ? new ArraySegment(this.array.slice(1)) : undefined;
+    }
 }
 
 export function* iterator<T>(segment: Segment<T>): Iterator<T> {
