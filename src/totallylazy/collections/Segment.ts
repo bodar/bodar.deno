@@ -1,3 +1,5 @@
+import {characters} from "../functions/characters.ts";
+
 export interface Segment<T> {
     readonly head: T | undefined;
     readonly tail: Segment<T> | undefined;
@@ -8,6 +10,7 @@ export function segment<T>(head: T | undefined = undefined, tail: Segment<T> | u
 }
 
 export function toArray<T>(segment: Segment<T>): T[] {
+    if (segment instanceof ArraySegment && Array.isArray(segment.array)) return segment.array;
     return Array.from(iterable(segment));
 }
 
@@ -21,12 +24,16 @@ export function fromArray<T>(array: SliceableArray<T>): Segment<T> {
     return new ArraySegment(array);
 }
 
+export function fromString(value: string): Segment<string> {
+    return fromArray(characters(value));
+}
+
 export interface SliceableArray<T> extends ArrayLike<T> {
     slice(start: number): SliceableArray<T>;
 }
 
 export class ArraySegment<T> implements Segment<T> {
-    constructor(private array: SliceableArray<T>) {
+    constructor(public array: SliceableArray<T>) {
     }
 
     get head(): T | undefined {

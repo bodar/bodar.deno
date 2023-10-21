@@ -1,6 +1,6 @@
 import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {fromArray, segment, toArray, toString} from "../../../src/totallylazy/collections/Segment.ts";
+import {fromArray, fromString, segment, toArray, toString} from "../../../src/totallylazy/collections/Segment.ts";
 import { is } from "../../../src/totallylazy/predicates/IsPredicate.ts";
 
 Deno.test("Segment", async (context) => {
@@ -26,7 +26,7 @@ Deno.test("Segment", async (context) => {
         assertThat(s.tail!.tail!.tail, is(undefined));
     });
 
-    await context.step("can also with TypeArrays", () => {
+    await context.step("can create from a TypeArray", () => {
         const hello: Uint8Array = new TextEncoder().encode('HELLO');
         const s = fromArray(hello);
         assertThat(s.head, is(72));
@@ -34,6 +34,16 @@ Deno.test("Segment", async (context) => {
         assertThat(s.tail!.tail!.head, is(76));
         assertThat(s.tail!.tail!.tail!.head, is(76));
         assertThat(s.tail!.tail!.tail!.tail!.head, is(79));
+        assertThat(s.tail!.tail!.tail!.tail!.tail, is(undefined));
+    });
+
+    await context.step("can create from as string", () => {
+        const s = fromString("HELLO");
+        assertThat(s.head, is('H'));
+        assertThat(s.tail!.head, is('E'));
+        assertThat(s.tail!.tail!.head, is('L'));
+        assertThat(s.tail!.tail!.tail!.head, is('L'));
+        assertThat(s.tail!.tail!.tail!.tail!.head, is('O'));
         assertThat(s.tail!.tail!.tail!.tail!.tail, is(undefined));
     });
 });
