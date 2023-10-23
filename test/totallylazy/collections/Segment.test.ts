@@ -37,7 +37,17 @@ Deno.test("Segment", async (context) => {
         assertThat(s.tail!.tail!.tail!.tail!.tail, is(undefined));
     });
 
-    await context.step("can create from as string", () => {
+    await context.step("toArray returns the original array if available", () => {
+        const original = [1, 2, 3];
+        const arraySegment = fromArray(original);
+        assertThat(toArray(arraySegment), is(original));
+
+        const hello: Uint8Array = new TextEncoder().encode('HELLO');
+        const helloSegment = fromArray(hello);
+        assertThat(toArray(helloSegment), is(hello));
+    });
+
+    await context.step("can create from a string", () => {
         const s = fromString("HELLO");
         assertThat(s.head, is('H'));
         assertThat(s.tail!.head, is('E'));

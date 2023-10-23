@@ -9,8 +9,8 @@ export function segment<T>(head: T | undefined = undefined, tail: Segment<T> | u
     return {head, tail};
 }
 
-export function toArray<T>(segment: Segment<T>): T[] {
-    if (segment instanceof ArraySegment && Array.isArray(segment.array)) return segment.array;
+export function toArray<T>(segment: Segment<T>): SliceableArray<T> {
+    if (segment instanceof ArraySegment) return segment.array;
     return Array.from(iterable(segment));
 }
 
