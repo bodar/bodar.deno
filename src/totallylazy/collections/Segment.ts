@@ -9,7 +9,12 @@ export function segment<T>(head: T | undefined = undefined, tail: Segment<T> | u
     return {head, tail};
 }
 
-export function toArray<T>(segment: Segment<T>): SliceableArray<T> {
+export function isEmpty(segment: Segment<unknown> | undefined): boolean {
+    if (segment === undefined) return true;
+    return segment.head === undefined;
+}
+
+export function toArray<T>(segment: Segment<T>): ArrayLike<T> {
     if (segment instanceof ArraySegment) return segment.array;
     return Array.from(iterable(segment));
 }
@@ -20,7 +25,7 @@ export function toString(segment: Segment<unknown>): string {
     return `segment(${segment.head}, ${toString(segment.tail)})`
 }
 
-export function fromArray<T>(array: SliceableArray<T>): Segment<T> {
+export function fromArray<T>(array: ArrayLike<T>): Segment<T> {
     return new ArraySegment(array);
 }
 
@@ -28,20 +33,16 @@ export function fromString(value: string): Segment<string> {
     return fromArray(characters(value));
 }
 
-export interface SliceableArray<T> extends ArrayLike<T> {
-    slice(start: number): SliceableArray<T>;
-}
-
 export class ArraySegment<T> implements Segment<T> {
-    constructor(public array: SliceableArray<T>) {
+    constructor(public array: ArrayLike<T>, public index: number = 0) {
     }
 
     get head(): T | undefined {
-        return this.array[0];
+        return this.array[this.index];
     }
 
     get tail(): Segment<T> | undefined {
-        return this.array.length > 1 ? new ArraySegment(this.array.slice(1)) : undefined;
+        return this.array.length > this.index + 1 ? new ArraySegment(this.array, this.index + 1) : undefined;
     }
 }
 
