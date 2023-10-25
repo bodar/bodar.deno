@@ -1,5 +1,5 @@
 import {Predicate} from "../predicates/Predicate.ts";
-import {isEmpty, Segment} from "../collections/Segment.ts";
+import {Segment} from "../collections/Segment.ts";
 import {Result} from "./Result.ts";
 import {fail} from "./Failure.ts";
 import {success} from "./Success.ts";
@@ -10,10 +10,11 @@ export class PredicateParser<A> implements Parser<A, A> {
     }
 
     parse(segment: Segment<A>): Result<A, A> {
-        if (isEmpty(segment)) return fail(this.predicate, "[EOF]");
-        const c = segment.head!;
+        if (segment.empty) return fail(this.predicate, "[EOF]");
+        const c = segment.head;
         return this.predicate(c) ?
-            success(c, segment.tail!) :
+            success(c, segment.tail) :
             fail(this.predicate, c);
     }
 }
+

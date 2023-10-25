@@ -1,60 +1,64 @@
-import {characters} from "../functions/characters.ts";
+import {NoSuchElement} from "../errors/NoSuchElement.ts";
 
-export interface Segment<T> {
-    readonly head: T | undefined;
-    readonly tail: Segment<T> | undefined;
+export interface Segment<T> extends Iterable<T> {
+    empty: boolean;
+
+    head: T;
+
+    tail: Segment<T>;
+}
+
+export class EmptySegment implements Segment<any> {
+    empty = true;
+
+    get head(): never {
+        throw new NoSuchElement();
+    }
+
+    get tail(): Segment<never> {
+        throw new NoSuchElement();
+    }
+
+    * [Symbol.iterator](): Iterator<any> {
+    }
+
+    toString() {
+        return toString(this);
+    }
+}
+
+export const empty = new EmptySegment();
+
+export class ASegment<T> implements Segment<T> {
+    empty = false;
+
+    constructor(public head: T, public tail: Segment<T>) {
+    }
+
+    [Symbol.iterator](): Iterator<T> {
+        return iterator(this);
+    }
+
+    toString() {
+        return toString(this);
+    }
 }
 
 export function segment<T>(head: T | undefined = undefined, tail: Segment<T> | undefined = undefined): Segment<T> {
-    return {head, tail};
-}
-
-export function isEmpty(segment: Segment<unknown> | undefined): boolean {
-    if (segment === undefined) return true;
-    return segment.head === undefined;
-}
-
-export function toArray<T>(segment: Segment<T>): ArrayLike<T> {
-    if (segment instanceof ArraySegment) return segment.array;
-    return Array.from(iterable(segment));
+    if (head === undefined && tail === undefined) return empty;
+    if (tail === undefined) return new ASegment<T>(head!, empty);
+    return new ASegment(head!, tail);
 }
 
 export function toString(segment: Segment<unknown>): string {
-    if (segment.head === undefined) return 'segment()';
-    if (segment.tail === undefined) return `segment(${segment.head})`;
+    if (segment.empty) return 'segment()';
+    if (segment.tail.empty) return `segment(${segment.head})`;
     return `segment(${segment.head}, ${toString(segment.tail)})`
 }
 
-export function fromArray<T>(array: ArrayLike<T>): Segment<T> {
-    return new ArraySegment(array);
-}
-
-export function fromString(value: string): Segment<string> {
-    return fromArray(characters(value));
-}
-
-export class ArraySegment<T> implements Segment<T> {
-    constructor(public array: ArrayLike<T>, public index: number = 0) {
-    }
-
-    get head(): T | undefined {
-        return this.array[this.index];
-    }
-
-    get tail(): Segment<T> | undefined {
-        return this.array.length > this.index + 1 ? new ArraySegment(this.array, this.index + 1) : undefined;
-    }
-}
-
 export function* iterator<T>(segment: Segment<T>): Iterator<T> {
-    while (segment) {
-        if (segment.head === undefined) return;
+    while (!segment.empty) {
         yield segment.head;
-        if (segment.tail === undefined) return;
         segment = segment.tail;
     }
-}
-
-export function iterable<T>(segment: Segment<T>): Iterable<T> {
-    return {[Symbol.iterator]: () => iterator(segment)};
 }

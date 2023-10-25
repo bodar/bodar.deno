@@ -15,6 +15,9 @@ export class Failure<A, B> implements Result<A, B> {
     toString() {
         return "Expected " + this.expected + " but was " + this.actual;
     }
+
+    * [Symbol.iterator](): Iterator<B> {
+    }
 }
 
 export function fail(expected: any, actual: any): Result<any, any> {
