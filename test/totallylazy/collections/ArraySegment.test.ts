@@ -2,7 +2,7 @@ import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {empty} from "../../../src/totallylazy/collections/Segment.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
-import {fromArray, fromString, toArray} from "../../../src/totallylazy/collections/ArraySegment.ts";
+import {fromArray, fromString} from "../../../src/totallylazy/collections/ArraySegment.ts";
 
 Deno.test("ArraySegment", async (context) => {
     await context.step("supports is empty", () => {
@@ -33,15 +33,15 @@ Deno.test("ArraySegment", async (context) => {
     await context.step("toArray returns the original array if available", () => {
         const original = [1, 2, 3];
         const arraySegment = fromArray(original);
-        assertThat(toArray(arraySegment), is(original));
-        assertThat(toArray(arraySegment.tail), equals(original.slice(1)));
-        assertThat(toArray(arraySegment.tail.tail), equals(original.slice(2)));
+        assertThat(arraySegment.toArray(), is(original));
+        assertThat(arraySegment.tail.toArray(), equals(original.slice(1)));
+        assertThat(arraySegment.tail.tail.toArray(), equals(original.slice(2)));
 
         const hello: Uint8Array = new TextEncoder().encode('HELLO');
         const helloSegment = fromArray(hello);
-        assertThat(toArray(helloSegment), is(hello));
-        assertThat(toArray(helloSegment.tail), equals(hello.subarray(1)));
-        assertThat(toArray(helloSegment.tail.tail), equals(hello.subarray(2)));
+        assertThat(helloSegment.toArray(), is(hello));
+        assertThat(helloSegment.tail.toArray(), equals(hello.subarray(1)));
+        assertThat(helloSegment.tail.tail.toArray(), equals(hello.subarray(2)));
     });
 
     await context.step("can create from a string", () => {
@@ -52,5 +52,10 @@ Deno.test("ArraySegment", async (context) => {
         assertThat(s.tail.tail.tail.head, is('L'));
         assertThat(s.tail.tail.tail.tail.head, is('O'));
         assertThat(s.tail.tail.tail.tail.tail, is(empty));
+    });
+
+    await context.step("is iterable", () => {
+        const s = fromString("HELLO");
+        assertThat(Array.from(s), equals(['H', 'E', 'L', 'L', 'O']));
     });
 });

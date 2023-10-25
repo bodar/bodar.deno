@@ -6,6 +6,10 @@ export interface Segment<T> extends Iterable<T> {
     head: T;
 
     tail: Segment<T>;
+
+    toString(): string;
+
+    toArray(): ArrayLike<T>;
 }
 
 export class EmptySegment implements Segment<any> {
@@ -22,8 +26,12 @@ export class EmptySegment implements Segment<any> {
     * [Symbol.iterator](): Iterator<any> {
     }
 
-    toString() {
+    toString(): string {
         return toString(this);
+    }
+
+    toArray(): ArrayLike<any> {
+        return [];
     }
 }
 
@@ -39,8 +47,12 @@ export class ASegment<T> implements Segment<T> {
         return iterator(this);
     }
 
-    toString() {
+    toString(): string {
         return toString(this);
+    }
+
+    toArray(): ArrayLike<T> {
+        return Array.from(this);
     }
 }
 
@@ -56,7 +68,7 @@ export function toString(segment: Segment<unknown>): string {
     return `segment(${segment.head}, ${toString(segment.tail)})`
 }
 
-export function* iterator<T>(segment: Segment<T>): Iterator<T> {
+function* iterator<T>(segment: Segment<T>): Iterator<T> {
     while (!segment.empty) {
         yield segment.head;
         segment = segment.tail;

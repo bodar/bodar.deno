@@ -1,5 +1,5 @@
 import {NoSuchElement} from "../errors/NoSuchElement.ts";
-import {empty, iterator, Segment, toString} from "./Segment.ts";
+import {empty, Segment, toString} from "./Segment.ts";
 import {characters} from "../functions/characters.ts";
 
 export class ArraySegment<T> implements Segment<T> {
@@ -19,12 +19,21 @@ export class ArraySegment<T> implements Segment<T> {
         return this.array.length > this.index + 1 ? new ArraySegment(this.array, this.index + 1) : empty;
     }
 
-    [Symbol.iterator](): Iterator<T> {
-        return iterator(this);
+    * [Symbol.iterator](): Iterator<T> {
+        for (let i = this.index; i < this.array.length; i++) {
+            yield this.array[i];
+        }
     }
 
-    toString() {
+    toString(): string {
         return toString(this);
+    }
+
+    toArray(): ArrayLike<T> {
+        if (this.index === 0) return this.array;
+        if ('subarray' in this.array && typeof this.array.subarray === "function") return this.array.subarray(this.index);
+        if ('slice' in this.array && typeof this.array.slice === "function") return this.array.slice(this.index);
+        return Array.prototype.slice.call(this.array, this.index);
     }
 }
 
@@ -36,12 +45,3 @@ export function fromString(value: string): Segment<string> {
     return fromArray(characters(value));
 }
 
-export function toArray<T>(segment: Segment<T>): ArrayLike<T> {
-    if (segment instanceof ArraySegment) {
-        if (segment.index === 0) return segment.array;
-        if ('subarray' in segment.array && typeof segment.array.subarray === "function") return segment.array.subarray(segment.index);
-        if ('slice' in segment.array && typeof segment.array.slice === "function") return segment.array.slice(segment.index);
-        return Array.prototype.slice.call(segment.array, segment.index);
-    }
-    return Array.from(segment);
-}
