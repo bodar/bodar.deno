@@ -11,7 +11,7 @@ export class PatternParser implements Parser<string, string> {
     parse(input: View<string>): Result<string, string> {
         const source = String(input.toSource());
         const match = source.match(this.pattern);
-        if (match == null) return fail(this.pattern, source);
+        if (match === null) return fail(this.pattern, source);
         const result = match[0];
         return success(result, input.slice(result.length));
     }

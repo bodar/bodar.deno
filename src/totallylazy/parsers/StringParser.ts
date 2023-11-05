@@ -9,7 +9,7 @@ export class StringParser implements Parser<string, string> {
     }
 
     parse(input: View<string>): Result<string, string> {
-        const other = input.slice(0, this.expected.length).toSource();
+        const other = String(input.slice(0, this.expected.length).toSource());
         if (this.expected !== other) return fail(this.expected, other);
         return success(this.expected, input.slice(this.expected.length));
     }
