@@ -1,7 +1,7 @@
-import {Segment} from "../collections/Segment.ts";
 import {Result} from "./Result.ts";
+import {View} from "./View.ts";
 
 export interface Parser<A, B> {
-    parse(segment: Segment<A>): Result<A, B>;
+    parse(input: View<A>): Result<A, B>;
 }
 

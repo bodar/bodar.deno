@@ -1,8 +1,8 @@
 import {Result} from "./Result.ts";
-import {Segment} from "../collections/Segment.ts";
+import {View} from "./View.ts";
 
 export class Success<A, B> implements Result<A, B> {
-    constructor(public value: B, public remainder: Segment<A>) {
+    constructor(public value: B, public remainder: View<A>) {
     }
 
     * [Symbol.iterator](): Iterator<B> {
@@ -10,6 +10,6 @@ export class Success<A, B> implements Result<A, B> {
     }
 }
 
-export function success<A, B>(value: B, remainder: Segment<A>): Result<A, B> {
+export function success<A, B>(value: B, remainder: View<A>): Result<A, B> {
     return new Success(value, remainder);
 }

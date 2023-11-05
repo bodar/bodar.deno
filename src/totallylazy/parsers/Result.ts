@@ -1,6 +1,6 @@
-import {Segment} from "../collections/Segment.ts";
+import {View} from "./View.ts";
 
 export interface Result<A, B> extends Iterable<B> {
     value: B;
-    remainder: Segment<A>;
+    remainder: View<A>;
 }

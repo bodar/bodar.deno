@@ -1,13 +1,13 @@
 import {Parser} from "./Parser.ts";
-import {Segment} from "../collections/Segment.ts";
 import {Result} from "./Result.ts";
 import {fail, Failure} from "./Failure.ts";
+import {View} from "./View.ts";
 
 export class OrParser<A, B> implements Parser<A, B> {
     constructor(private readonly parsers: Parser<A, B>[]) {
     }
 
-    parse(segment: Segment<A>): Result<A, B> {
+    parse(segment: View<A>): Result<A, B> {
         for (const parser of this.parsers) {
             const result = parser.parse(segment);
             if (!(result instanceof Failure)) return result;
