@@ -29,9 +29,9 @@ export class ArrayView<A> implements View<A> {
         return this.values.at(this.offset + index);
     }
 
-    slice(start: number = 0, end?: number): ArrayView<A> {
+    slice(start: number = 0, end: number = this.length): ArrayView<A> {
         const offset = this.offset + start;
-        const limit = end === undefined ? this.length - start : end - start;
+        const limit = end - start;
         return new ArrayView(this.values, offset, limit);
     }
 
