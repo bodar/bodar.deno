@@ -31,7 +31,8 @@ export function sequence<A, B, C>(a: Iterable<A>, b: Transducer<A, B>, c: Transd
 export function sequence<A, B, C, D>(a: Iterable<A>, b: Transducer<A, B>, c: Transducer<B, C>, d: Transducer<C, D>): Sequence<D>;
 export function sequence<A, B, C, D, E>(a: Iterable<A>, b: Transducer<A, B>, c: Transducer<B, C>, d: Transducer<C, D>, e: Transducer<D, E>): Sequence<E>;
 export function sequence<A, B, C, D, E, F>(a: Iterable<A>, b: Transducer<A, B>, c: Transducer<B, C>, d: Transducer<C, D>, e: Transducer<D, E>, f: Transducer<E, F>): Sequence<F>;
-export function sequence(source: Iterable<any>, ...transducers: readonly Transducer<any, any>[]): Sequence<any> | AsyncIterable<any> {
+export function sequence(source: Iterable<any>, ...transducers: readonly Transducer<any, any>[]): Sequence<any> ;
+export function sequence(source: Iterable<any>, ...transducers: readonly Transducer<any, any>[]): Sequence<any> {
     if (source instanceof Sequence) {
         return new Sequence<any>(source.source, flatten([...source.transducers, ...transducers]));
     }
