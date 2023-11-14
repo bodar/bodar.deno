@@ -7,7 +7,7 @@ export interface Result<A, B> extends Iterable<B> {
     remainder: View<A>;
 }
 
-export class TransducedResult<A, B> implements Result<A, B> {
+export class TransducingResult<A, B> implements Result<A, B> {
     constructor(public readonly source: Result<any, any>,
                 public readonly transducers: readonly Transducer<any, any>[]) {
     }
@@ -33,5 +33,5 @@ export function result<A, B, C, D, E, F>(a: Result<A, B>, b: Transducer<B, C>, c
 export function result<A, B, C, D, E, F, G>(a: Result<A, B>, b: Transducer<B, C>, c: Transducer<C, D>, d: Transducer<D, E>, f: Transducer<E, F>, g: Transducer<F, G>): Result<A, G>;
 export function result(source: Result<any, any>, ...transducers: readonly Transducer<any, any>[]): Result<any, any>;
 export function result(source: Result<any, any>, ...transducers: readonly Transducer<any, any>[]): Result<any, any> {
-    return new TransducedResult(source, transducers);
+    return new TransducingResult(source, transducers);
 }

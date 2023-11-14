@@ -21,3 +21,7 @@ export class PatternParser implements Parser<string, string> {
     }
 }
 
+export function pattern(matcher: Matcher): Parser<string, string> {
+    return new PatternParser(matcher);
+}
+
