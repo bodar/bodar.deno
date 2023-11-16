@@ -1,6 +1,7 @@
 import {View} from "./View.ts";
 import {Transducer} from "../transducers/Transducer.ts";
 import {single} from "../collections/Single.ts";
+import {lazy} from "../decorators/lazy.ts";
 
 export interface Result<A, B> extends Iterable<B> {
     value: B;
@@ -12,7 +13,7 @@ export class TransducingResult<A, B> implements Result<A, B> {
                 public readonly transducers: readonly Transducer<any, any>[]) {
     }
 
-    get value(): B {
+    @lazy get value(): B {
         return single(this.source, ...this.transducers);
     }
 
