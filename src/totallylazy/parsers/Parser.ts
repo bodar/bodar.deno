@@ -1,14 +1,20 @@
 import {result, Result} from "./Result.ts";
 import {View} from "./View.ts";
-import {Transducer} from "../transducers/Transducer.ts";
+import {isTransducer, Transducer} from "../transducers/Transducer.ts";
+import {flatten} from "../transducers/CompositeTransducer.ts";
 
 export interface Parser<A, B> {
     parse(input: View<A>): Result<A, B>;
 }
 
 export class TransducingParser<A, B> implements Parser<A, B> {
-    constructor(private readonly parser: Parser<any, any>,
-                private readonly transducers: readonly Transducer<any, any>[]) {
+    private constructor(private readonly parser: Parser<any, any>,
+                        private readonly transducers: readonly Transducer<any, any>[]) {
+    }
+
+    static create<A, B>(parser: Parser<any, any>, ...transducers: readonly Transducer<any, any>[]): TransducingParser<A, B> {
+        if (parser instanceof TransducingParser) return TransducingParser.create(parser.parser, ...[...parser.transducers, ...transducers]);
+        return new TransducingParser(parser, flatten(transducers));
     }
 
     parse(input: View<A>): Result<A, B> {
@@ -17,14 +23,19 @@ export class TransducingParser<A, B> implements Parser<A, B> {
 }
 
 
-export function parser<A, B>(a: Parser<A, B>): Parser<A, B>;
-export function parser<A, B, C>(a: Parser<A, B>, b: Transducer<B, C>): Parser<A, C>;
-export function parser<A, B, C, D>(a: Parser<A, B>, b: Transducer<B, C>, c: Transducer<C, D>): Parser<A, D>;
-export function parser<A, B, C, D, E>(a: Parser<A, B>, b: Transducer<B, C>, c: Transducer<C, D>, d: Transducer<D, E>): Parser<A, E>;
-export function parser<A, B, C, D, E, F>(a: Parser<A, B>, b: Transducer<B, C>, c: Transducer<C, D>, d: Transducer<D, E>, f: Transducer<E, F>): Parser<A, F>;
-export function parser<A, B, C, D, E, F, G>(a: Parser<A, B>, b: Transducer<B, C>, c: Transducer<C, D>, d: Transducer<D, E>, f: Transducer<E, F>, g: Transducer<F, G>): Parser<A, G>;
-export function parser(source: Parser<any, any>, ...transducers: readonly Transducer<any, any>[]): Parser<any, any>;
-export function parser(source: Parser<any, any>, ...transducers: readonly Transducer<any, any>[]): Parser<any, any> {
-    return new TransducingParser(source, transducers);
-}
+export type Transformer<A, B, C> = (a: Parser<A, B>) => Parser<A, C>;
+export type Step<A, B, C> = Transformer<A, B, C> | Transducer<B, C>;
 
+export function parser<A, B>(a: Parser<A, B>): Parser<A, B>;
+export function parser<A, B, C>(a: Parser<A, B>, b: Step<A, B, C>): Parser<A, C>;
+export function parser<A, B, C, D>(a: Parser<A, B>, b: Step<A, B, C>, c: Step<A, C, D>): Parser<A, D>;
+export function parser<A, B, C, D, E>(a: Parser<A, B>, b: Step<A, B, C>, c: Step<A, C, D>, d: Step<A, D, E>): Parser<A, E>;
+export function parser<A, B, C, D, E, F>(a: Parser<A, B>, b: Step<A, B, C>, c: Step<A, C, D>, d: Step<A, D, E>, e: Step<A, E, F>): Parser<A, F>;
+export function parser<A, B, C, D, E, F, G>(a: Parser<A, B>, b: Step<A, B, C>, c: Step<A, C, D>, d: Step<A, D, E>, e: Step<A, E, F>, f: Step<A, F, G>): Parser<A, G>;
+export function parser<A>(a: Parser<A, any>, ...chain: Step<A, any, any>[]): Parser<A, any> ;
+export function parser<A>(a: Parser<A, any>, ...chain: Step<A, any, any>[]): Parser<A, any> {
+    return chain.reduce((a, b) => {
+        if (isTransducer(b)) return TransducingParser.create(a, b);
+        return b(a);
+    }, a);
+}

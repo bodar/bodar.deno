@@ -1,8 +1,9 @@
-import {Parser} from "./Parser.ts";
+import {Parser, parser} from "./Parser.ts";
 import {View} from "./View.ts";
 import {Result} from "./Result.ts";
 import {Failure} from "./Failure.ts";
 import {success} from "./Success.ts";
+import {map} from "../transducers/MapTransducer.ts";
 
 export class PairParser<A, B, C> implements Parser<A, [B, C]> {
     constructor(private readonly first: Parser<A, B>,
@@ -22,4 +23,16 @@ export class PairParser<A, B, C> implements Parser<A, [B, C]> {
 
 export function pair<A, B, C>(first: Parser<A, B>, second: Parser<A, C>): Parser<A, [B, C]> {
     return new PairParser(first, second);
+}
+
+export function then<A, B, C>(second: Parser<A, C>): (first: Parser<A, B>) => Parser<A, [B, C]> {
+    return first => pair(first, second);
+}
+
+export function followedBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
+    return first => parser(pair(first, second), map(([b, _]:[b:B, _:any]) => b));
+}
+
+export function precededBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
+    return first => parser(pair(second, first), map(([_, b]:[_:any, b:B]) => b));
 }
