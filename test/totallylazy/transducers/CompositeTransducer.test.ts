@@ -20,7 +20,7 @@ Deno.test("CompositeTransducer", async (context) => {
     });
 
     await context.step("is self describing", () => {
-        assertThat(t.toString(), is(`${f}, ${m}`));
+        assertThat(t.toString(), is(`compose(${f},${m})`));
     });
 
     await context.step("overload works with more than 2 arguments", () => {

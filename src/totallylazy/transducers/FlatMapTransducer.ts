@@ -21,10 +21,7 @@ export function flatMap<A, B>(mapper: Mapper<A, Iterable<B>>): FlatMapTransducer
         for (const a of iterable) {
             yield* mapper(a);
         }
-    }, {
-        mapper,
-        toString: () => `flatMap(${mapper})`
-    });
+    }, {mapper});
 }
 
 export function isFlatMapTransducer(value: any): value is FlatMapTransducer<any, any> {

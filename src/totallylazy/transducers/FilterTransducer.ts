@@ -22,11 +22,7 @@ export function filter<A>(predicate: Predicate<A>): FilterTransducer<A> {
         for (const a of iterable) {
             if (predicate(a)) yield a;
         }
-    }, {
-        predicate,
-        toString: () => `filter(${predicate})`
-    });
-
+    }, {predicate});
 }
 
 /**

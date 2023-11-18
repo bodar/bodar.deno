@@ -21,10 +21,7 @@ export function map<A, B>(mapper: Mapper<A, B>): MapTransducer<A, B> {
         for (const a of iterable) {
             yield mapper(a);
         }
-    }, {
-        mapper,
-        toString: () => `map(${mapper})`
-    });
+    }, {mapper});
 }
 
 export function isMapTransducer(value: any): value is MapTransducer<any, any> {

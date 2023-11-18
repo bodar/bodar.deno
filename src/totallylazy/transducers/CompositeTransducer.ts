@@ -23,8 +23,7 @@ export function compose<A, Z>(...transducers: readonly [Transducer<A, any>, ...T
 export function compose(...transducers: readonly Transducer<any, any>[]): CompositeTransducer<any, any> {
     const flat = flatten(transducers);
     return transducer('compose', (iterable: Iterable<any>) => flat.reduce((a, t) => t(a), iterable), {
-        transducers: flat,
-        toString: () => transducers.join(', ')
+        transducers: flat
     });
 }
 
