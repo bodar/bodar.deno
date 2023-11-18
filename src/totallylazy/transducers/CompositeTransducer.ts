@@ -1,10 +1,12 @@
-import {Transducer} from "./Transducer.ts";
+import {transducer, Transducer} from "./Transducer.ts";
 
 /**
  * A transducer that applies the given transducers in order
  */
 export interface CompositeTransducer<A, B> extends Transducer<A, B> {
      readonly transducers: readonly Transducer<any, any>[];
+
+     readonly [Transducer.type]: 'compose';
 }
 
 /**
@@ -20,7 +22,7 @@ export function compose<A, B, C, D, E, F, G, H, I>(a: Transducer<A, B>, b: Trans
 export function compose<A, Z>(...transducers: readonly [Transducer<A, any>, ...Transducer<any, any>[], Transducer<any, Z>]): CompositeTransducer<A, Z>;
 export function compose(...transducers: readonly Transducer<any, any>[]): CompositeTransducer<any, any> {
     const flat = flatten(transducers);
-    return Object.assign((iterable: Iterable<any>) => flat.reduce((a, t) => t(a), iterable), {
+    return transducer('compose', (iterable: Iterable<any>) => flat.reduce((a, t) => t(a), iterable), {
         transducers: flat,
         toString: () => transducers.join(', ')
     });
@@ -30,7 +32,7 @@ export function compose(...transducers: readonly Transducer<any, any>[]): Compos
  * Checks if the given value is a CompositeTransducer
  */
 export function isCompositeTransducer(value: any): value is CompositeTransducer<any, any> {
-    return typeof value === 'function' && Array.isArray(value.transducers);
+    return value instanceof Transducer && value[Transducer.type] === 'compose' && Array.isArray((value as any).transducers);
 }
 
 /**

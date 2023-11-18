@@ -2,6 +2,7 @@ import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {filter, isFilterTransducer} from "../../../src/totallylazy/transducers/FilterTransducer.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
+import { Transducer } from "../../../src/totallylazy/transducers/Transducer.ts";
 
 const even = (x: number) => x % 2 === 0;
 const transducer = filter(even);
@@ -15,8 +16,8 @@ Deno.test("FilterTransducer", async (context) => {
         assertThat(transducer.predicate, is(even));
     });
 
-    await context.step("has function name", () => {
-        assertThat(transducer.name, is('filter'));
+    await context.step("has transducer type", () => {
+        assertThat(transducer[Transducer.type], is('filter'));
     });
 
 

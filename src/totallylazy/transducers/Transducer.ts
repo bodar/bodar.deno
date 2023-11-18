@@ -11,13 +11,19 @@ export interface Transducer<A, B>  {
      * Returns a string representation of the transducer
      */
     toString(): string;
+
+    readonly [Transducer.type]: string;
 }
 
-/**
- * Returns true if the given value is a transducer
- *
- * TODO: work out way to make this more specific, maybe using a symbol?
- */
-export function isTransducer(value: any): value is Transducer<any, any> {
-    return typeof value === 'function' && value.length === 1 && Object.hasOwn(value, 'toString');
+export class Transducer<A, B> {
+    static readonly type = Symbol('Transducer');
+
+    static [Symbol.hasInstance](value: any): boolean {
+        return typeof value === 'function' && value.length === 1 && Object.hasOwn(value, Transducer.type);
+    }
 }
+
+export function transducer<N extends string, T extends object, U extends object>(name: N, target: T, source: U) {
+    return Object.assign(target, source, {[Transducer.type]: name});
+}
+

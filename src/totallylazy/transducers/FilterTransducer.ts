@@ -1,6 +1,6 @@
 import { not } from "../predicates/NotPredicate.ts";
 import {Predicate} from "../predicates/Predicate.ts";
-import {Transducer} from "./Transducer.ts";
+import {transducer, Transducer} from "./Transducer.ts";
 
 /**
  * A transducer that filters the given iterable by the given predicate
@@ -9,14 +9,16 @@ export interface FilterTransducer<A> extends Transducer<A, A> {
     /**
      * The predicate to filter by
      */
-    readonly predicate: Predicate<A>
+    readonly predicate: Predicate<A>;
+
+    readonly [Transducer.type]: 'filter';
 }
 
 /**
  * Creates a transducer that filters the given iterable by the given predicate
  */
 export function filter<A>(predicate: Predicate<A>): FilterTransducer<A> {
-    return Object.assign(function* filter(iterable: Iterable<A>) {
+    return transducer('filter', function* (iterable: Iterable<A>) {
         for (const a of iterable) {
             if (predicate(a)) yield a;
         }
@@ -42,5 +44,5 @@ export function reject<A>(predicate: Predicate<A>) {
 
 
 export function isFilterTransducer(value: any): value is FilterTransducer<any> {
-    return typeof value === 'function' && value.name === 'filter' && Object.hasOwn(value, 'predicate');
+    return value instanceof Transducer && value[Transducer.type] === 'filter' && Object.hasOwn(value, 'predicate');
 }

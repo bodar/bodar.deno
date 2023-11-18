@@ -1,6 +1,6 @@
 import {result, Result} from "./Result.ts";
 import {View} from "./View.ts";
-import {isTransducer, Transducer} from "../transducers/Transducer.ts";
+import {Transducer} from "../transducers/Transducer.ts";
 import {flatten} from "../transducers/CompositeTransducer.ts";
 
 export interface Parser<A, B> {
@@ -35,7 +35,7 @@ export function parser<A, B, C, D, E, F, G>(a: Parser<A, B>, b: Step<A, B, C>, c
 export function parser<A>(a: Parser<A, any>, ...chain: Step<A, any, any>[]): Parser<A, any> ;
 export function parser<A>(a: Parser<A, any>, ...chain: Step<A, any, any>[]): Parser<A, any> {
     return chain.reduce((a, b) => {
-        if (isTransducer(b)) return TransducingParser.create(a, b);
+        if (b instanceof Transducer) return TransducingParser.create(a, b);
         return b(a);
     }, a);
 }
