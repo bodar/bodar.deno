@@ -7,7 +7,7 @@ import {flatMap} from "../../../src/totallylazy/transducers/FlatMapTransducer.ts
 import {string} from "../../../src/totallylazy/parsers/StringParser.ts";
 import {parser} from "../../../src/totallylazy/parsers/Parser.ts";
 import {pattern} from "../../../src/totallylazy/parsers/PatternParser.ts";
-import {precededBy, then} from "../../../src/totallylazy/parsers/PairParser.ts";
+import {between, precededBy, then} from "../../../src/totallylazy/parsers/parsers.ts";
 
 Deno.test("Parser", async (context) => {
     await context.step("can map", () => {
@@ -24,11 +24,18 @@ Deno.test("Parser", async (context) => {
         assertThat(r.remainder.toSource(), is(' USD'));
     });
 
-    await context.step("can compose", () => {
+    await context.step("can compose with 'then'", () => {
         const input = view('123 USD');
         const r = parser(pattern(/\d+/), map(Number), then(
             parser(string('USD'), precededBy(string(' '))))).parse(input);
         assertThat(r.value, equals([123, 'USD']));
         assertThat(r.remainder.toSource(), is(''));
+    });
+
+    await context.step("can compose with 'between'", () => {
+        const input = view('"DAN", 123');
+        const r = parser(pattern(/[A-Z]+/), between(string('"'))).parse(input);
+        assertThat(r.value, is('DAN'));
+        assertThat(r.remainder.toSource(), is(', 123'));
     });
 });

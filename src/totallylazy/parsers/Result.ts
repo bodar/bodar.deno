@@ -2,6 +2,7 @@ import {View} from "./View.ts";
 import {Transducer} from "../transducers/Transducer.ts";
 import {single} from "../collections/Single.ts";
 import {lazy} from "../decorators/lazy.ts";
+import {Failure} from "./Failure.ts";
 
 export interface Result<A, B> extends Iterable<B> {
     value: B;
@@ -34,5 +35,6 @@ export function result<A, B, C, D, E, F>(a: Result<A, B>, b: Transducer<B, C>, c
 export function result<A, B, C, D, E, F, G>(a: Result<A, B>, b: Transducer<B, C>, c: Transducer<C, D>, d: Transducer<D, E>, f: Transducer<E, F>, g: Transducer<F, G>): Result<A, G>;
 export function result(source: Result<any, any>, ...transducers: readonly Transducer<any, any>[]): Result<any, any>;
 export function result(source: Result<any, any>, ...transducers: readonly Transducer<any, any>[]): Result<any, any> {
+    if (source instanceof Failure) return source;
     return new TransducingResult(source, transducers);
 }
