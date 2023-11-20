@@ -12,8 +12,7 @@ Deno.test("Grammar", async (context) => {
 
     await context.step("can parse boolean", () => {
         assertThat(Grammar.boolean.parse(view('true')).value, is(true));
-        const result = Grammar.boolean.parse(view('false'));
-        assertThat(result.value, is(false));
+        assertThat(Grammar.boolean.parse(view('false')).value, is(false));
         assertTrue(Grammar.boolean.parse(view('failure')) instanceof Failure);
     });
 });

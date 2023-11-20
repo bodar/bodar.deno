@@ -21,8 +21,8 @@ export class TupleParser<A, T extends any[]> implements Parser<A, T> {
     }
 }
 
-type ParserResult<T> = T extends Parser<any, infer R> ? R : never;
-type TupleResult<P extends Parser<any, any>[]> = { [K in keyof P]: ParserResult<P[K]> };
+type ParserResult<P> = P extends Parser<any, infer R> ? R : never;
+type TupleResult<P extends Parser<any, any>[]> = { [I in keyof P]: ParserResult<P[I]> };
 
 export function tuple<A, P extends Parser<A, any>[]>(...parsers: P): Parser<A, TupleResult<P>> {
     return new TupleParser(parsers);
