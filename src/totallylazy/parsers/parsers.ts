@@ -6,6 +6,10 @@ export function then<A, B, C>(second: Parser<A, C>): (first: Parser<A, B>) => Pa
     return first => pair(first, second);
 }
 
+export function next<A, B, C>(second: Parser<A, C>): (first: Parser<A, B>) => Parser<A, C> {
+    return first => parser(pair(first, second), map(([, b]) => b));
+}
+
 export function followedBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
     return first => parser(pair(first, second), map(([b, _]) => b));
 }

@@ -15,4 +15,10 @@ Deno.test("Grammar", async (context) => {
         assertThat(Grammar.boolean.parse(view('false')).value, is(false));
         assertTrue(Grammar.boolean.parse(view('failure')) instanceof Failure);
     });
+
+    await context.step("can parse escaped character", () => {
+        assertThat(Grammar.escapedCharacter.parse(view("\\\"")).value, is("\""));
+        assertThat(Grammar.escapedCharacter.parse(view("\\\\")).value, is("\\"));
+        assertTrue(Grammar.escapedCharacter.parse(view('failure')) instanceof Failure);
+    });
 });
