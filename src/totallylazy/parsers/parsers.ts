@@ -1,6 +1,8 @@
 import {parser, Parser} from "./Parser.ts";
 import {map} from "../transducers/MapTransducer.ts";
 import {pair, triple} from "./TupleParser.ts";
+import {string} from "./StringParser.ts";
+import {DebugParser} from "./DebugParser.ts";
 
 export function then<A, B, C>(second: Parser<A, C>): (first: Parser<A, B>) => Parser<A, [B, C]> {
     return first => pair(first, second);
@@ -30,6 +32,16 @@ export function returns<A, T>(value: T): (first: Parser<A, any>) => Parser<A, T>
     return instance => parser(instance, map(() => value));
 }
 
-export function ignore<A>(): (first: Parser<A, any>) => Parser<A, undefined> {
-    return returns(undefined);
+export function ignore<A>(first: Parser<A, any>): Parser<A, undefined> {
+    return returns<A, any>(undefined)(first);
+}
+
+type Not<T> = any extends T ? never : any;
+
+export function literal<A extends Not<string>>(literal: A): Parser<string, A> {
+    return parser(string(String(literal)), returns(literal));
+}
+
+export function debug<A, B>(name: string): (parser: Parser<A, B>) => Parser<A, B> {
+    return parser => new DebugParser(parser, name);
 }
