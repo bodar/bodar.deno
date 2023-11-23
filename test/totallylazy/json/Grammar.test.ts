@@ -5,6 +5,7 @@ import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {Grammar} from "../../../src/totallylazy/json/Grammar.ts";
 import {Failure} from "../../../src/totallylazy/parsers/Failure.ts";
 
+
 Deno.test("Grammar", async (context) => {
     await context.step("can parse null", () => {
         assertThat(Grammar.null.parse(view('null')).value, is(null));
@@ -55,5 +56,20 @@ Deno.test("Grammar", async (context) => {
     await context.step("can parse member", () => {
         assertThat(Grammar.member.parse(view('"foo":"value"')).value, equals(['foo', 'value']));
         assertThat(Grammar.member.parse(view('"foo":123')).value, equals(['foo', 123]));
+    });
+
+    await context.step("can parse array", () => {
+        assertThat(Grammar.array.parse(view('["foo"]')).value, equals(['foo']));
+        assertThat(Grammar.array.parse(view('["foo",123]')).value, equals(['foo', 123]));
+    });
+
+    await context.step("can parse object", () => {
+        assertThat(Grammar.object.parse(view('{"foo":123}')).value, equals({foo: 123}));
+        assertThat(Grammar.object.parse(view('{"foo":123,"bar":"baz"}')).value, equals({foo: 123, bar: 'baz'}));
+    });
+
+    await context.step("handles whitespace", () => {
+        assertThat(Grammar.value.parse(view(' [ [ "cats" , "dogs" ] , [ true , false ] , { "foo" : true , "bar" : false } ] ')).value,
+            equals([["cats", "dogs"], [true, false], {"foo": true, "bar": false}]));
     });
 });

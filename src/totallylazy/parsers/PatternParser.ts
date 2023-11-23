@@ -4,12 +4,8 @@ import {fail} from "./Failure.ts";
 import {success} from "./Success.ts";
 import {View} from "./View.ts";
 
-export interface Matcher {
-    [Symbol.match](string: string): RegExpMatchArray | null;
-}
-
 export class PatternParser implements Parser<string, string> {
-    constructor(private readonly matcher: Matcher) {
+    constructor(private readonly matcher: RegExp) {
     }
 
     parse(input: View<string>): Result<string, string> {
@@ -21,7 +17,8 @@ export class PatternParser implements Parser<string, string> {
     }
 }
 
-export function pattern(matcher: Matcher): Parser<string, string> {
+export function pattern(matcher: RegExp, fromStart: boolean = true): Parser<string, string> {
+    if (fromStart && !matcher.source.startsWith('^')) return new PatternParser(new RegExp(`^${matcher.source}`, matcher.flags))
     return new PatternParser(matcher);
 }
 

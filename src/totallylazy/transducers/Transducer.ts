@@ -1,7 +1,7 @@
 /**
  * A transducer that can be applied synchronously
  */
-export interface Transducer<A, B>  {
+export interface Transducer<A, B> {
     /**
      * Applies the transducer to the given iterable
      */
@@ -24,7 +24,7 @@ export class Transducer<A, B> {
 }
 
 export function transducer<N extends string, T extends (iterable: Iterable<any>) => Iterable<any>, U extends object>(name: N, target: T, source: U) {
-    return Object.assign(target,  {
+    return Object.assign(target, {
         [Transducer.type]: name,
         toString: () => `${name}(${Object.values(source)})`
     }, source);
