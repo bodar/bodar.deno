@@ -21,6 +21,9 @@ export class ManyParser<A, B> implements Parser<A, B[]> {
     }
 }
 
-export function many<A, B>(parser: Parser<A, B>): Parser<A, B[]> {
-    return new ManyParser(parser);
+export function many<A, B>(): (parser: Parser<A, B>) => Parser<A, B[]>;
+export function many<A, B>(parser: Parser<A, B>): Parser<A, B[]>;
+export function many(...args: any[]): any {
+    if(args.length === 0) return many;
+    return new ManyParser(args[0]);
 }

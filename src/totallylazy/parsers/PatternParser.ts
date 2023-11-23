@@ -21,4 +21,3 @@ export function pattern(matcher: RegExp, fromStart: boolean = true): Parser<stri
     if (fromStart && !matcher.source.startsWith('^')) return new PatternParser(new RegExp(`^${matcher.source}`, matcher.flags))
     return new PatternParser(matcher);
 }
-

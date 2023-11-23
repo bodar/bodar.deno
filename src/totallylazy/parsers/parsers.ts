@@ -4,7 +4,7 @@ import {pair, triple} from "./TupleParser.ts";
 import {string} from "./StringParser.ts";
 import {DebugParser} from "./DebugParser.ts";
 import {optional} from "./OptionalParser.ts";
-import {ManyParser} from "./ManyParser.ts";
+import {many} from "./ManyParser.ts";
 import {pattern} from "./PatternParser.ts";
 
 export function then<A, B, C>(second: Parser<A, C>): (first: Parser<A, B>) => Parser<A, [B, C]> {
@@ -25,10 +25,6 @@ export function followedByOptional<A, B>(second: Parser<A, any>): (first: Parser
 
 export function separatedBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B[]> {
     return first => parser(first, followedByOptional(second), many());
-}
-
-export function many<A, B>(): (first: Parser<A, B>) => Parser<A, B[]> {
-    return first => new ManyParser(first);
 }
 
 export function precededBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
