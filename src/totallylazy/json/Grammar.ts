@@ -39,20 +39,20 @@ export class Grammar {
 
     static characters: Parser<string, string> = pattern(/[^"\\]+/);
 
-    static string: Parser<string, string> = parser(Grammar.escaped, or(Grammar.characters), many(),
+    static string: Parser<string, string> = parser(Grammar.characters, or(Grammar.escaped), many(),
         map(characters => characters.join('')), surroundedBy(string('"')));
 
     static number: Parser<string, number> = parser(pattern(/[-+eE.\d]+/), map(Number));
 
-    static value: Parser<string, JsonValue> = lazy(() => or(Grammar.object, Grammar.array, Grammar.string, Grammar.number, Grammar.boolean, Grammar.null));
+    static value: Parser<string, JsonValue> = lazy(() => whitespace(or(Grammar.object, Grammar.array, Grammar.string, Grammar.number, Grammar.boolean, Grammar.null)));
 
-    static array: Parser<string, JsonValue[]> = parser(whitespace(Grammar.value), separatedBy(string(',')),
-        between(whitespace(string('[')), whitespace(string(']'))));
+    static array: Parser<string, JsonValue[]> = parser(Grammar.value, separatedBy(string(',')),
+        between(string('['), string(']')));
 
-    static member: Parser<string, [string, JsonValue]> = parser(triple(whitespace(Grammar.string), string(':'), whitespace(Grammar.value)),
+    static member: Parser<string, [string, JsonValue]> = parser(triple(whitespace(Grammar.string), string(':'), Grammar.value),
         map(([key, , value]) => [key, value]));
 
     static object: Parser<string, JsonValue> = parser(Grammar.member, separatedBy(string(',')),
-        between(whitespace(string('{')), whitespace(string('}'))), map(members => Object.fromEntries(members)));
+        between(string('{'), string('}')), map(members => Object.fromEntries(members)));
 }
 

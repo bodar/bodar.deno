@@ -71,5 +71,6 @@ Deno.test("Grammar", async (context) => {
     await context.step("handles whitespace", () => {
         assertThat(Grammar.value.parse(view(' [ [ "cats" , "dogs" ] , [ true , false ] , { "foo" : true , "bar" : false } ] ')).value,
             equals([["cats", "dogs"], [true, false], {"foo": true, "bar": false}]));
+        assertThat(Grammar.value.parse(view(' null ')).value, is(null));
     });
 });
