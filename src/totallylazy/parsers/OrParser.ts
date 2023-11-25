@@ -12,7 +12,7 @@ export class OrParser<A, B> implements Parser<A, B> {
             const result = parser.parse(segment);
             if (!(result instanceof Failure)) return result;
         }
-        return fail(this.parsers, segment);
+        return fail(`OrParser failed(${this.parsers})`, segment);
     }
 }
 

@@ -1,4 +1,5 @@
 import {Result} from "./Result.ts";
+import {toString} from "../functions/toString.ts";
 
 export class Failure<A, B> implements Result<A, B> {
     constructor(public expected: any, public actual: any) {
@@ -13,7 +14,7 @@ export class Failure<A, B> implements Result<A, B> {
     }
 
     toString() {
-        return "Expected " + this.expected + " but was " + this.actual;
+        return "Expected " + toString(this.expected) + " but was " + toString(this.actual);
     }
 
     * [Symbol.iterator](): Iterator<B> {

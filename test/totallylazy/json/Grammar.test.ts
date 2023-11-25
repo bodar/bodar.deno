@@ -2,7 +2,7 @@ import {view} from "../../../src/totallylazy/parsers/View.ts";
 import {assertThat, assertTrue} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {Grammar} from "../../../src/totallylazy/json/Grammar.ts";
+import {Grammar, Comment} from "../../../src/totallylazy/json/Grammar.ts";
 import {Failure} from "../../../src/totallylazy/parsers/Failure.ts";
 
 
@@ -72,5 +72,14 @@ Deno.test("Grammar", async (context) => {
         assertThat(Grammar.value.parse(view(' [ [ "cats" , "dogs" ] , [ true , false ] , { "foo" : true , "bar" : false } ] ')).value,
             equals([["cats", "dogs"], [true, false], {"foo": true, "bar": false}]));
         assertThat(Grammar.value.parse(view(' null ')).value, is(null));
+    });
+
+    await context.step("supports comments", () => {
+        assertThat(Grammar.comment.parse(view('// This is a single line comment\n')).value,
+            equals(new Comment('This is a single line comment')));
+        assertThat(Grammar.comment.parse(view('// This is a single line comment')).value,
+            equals(new Comment('This is a single line comment')));
+        assertThat(Grammar.comment.parse(view('/* This is a multi line comment */')).value,
+            equals(new Comment('This is a multi line comment')));
     });
 });

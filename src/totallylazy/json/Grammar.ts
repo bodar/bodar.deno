@@ -8,6 +8,9 @@ import {many} from "../parsers/ManyParser.ts";
 import {JsonValue} from "./types.ts";
 import {triple} from "../parsers/TupleParser.ts";
 import {lazy} from "../functions/lazy.ts";
+import {eof} from "../parsers/EofParser.ts";
+import {until} from "../parsers/UntilParser.ts";
+import {any} from "../parsers/AnyParser.ts";
 
 function unescape(escaped: 'b' | 'n' | 'r' | 't' | 'f'): string {
     switch (escaped) {
@@ -23,6 +26,11 @@ function unescape(escaped: 'b' | 'n' | 'r' | 't' | 'f'): string {
             return '\f';
         default:
             throw new Error(`Should never happen: ${escaped}`);
+    }
+}
+
+export class Comment {
+    constructor(public value: string) {
     }
 }
 
@@ -54,5 +62,10 @@ export class Grammar {
 
     static object: Parser<string, JsonValue> = parser(Grammar.member, separatedBy(string(',')),
         between(string('{'), string('}')), map(members => Object.fromEntries(members)));
+
+    static comment: Parser<string, Comment> = parser(or(
+        parser(pattern(/[^\n]*/), between(string('//'), or(string('\n'), eof()))),
+        parser(any(), until(string('*/')), between(string('/*'), string('*/')), map(characters => characters.join('')))
+        ), map(c => new Comment(c.trim())));
 }
 
