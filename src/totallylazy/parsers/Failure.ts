@@ -21,6 +21,10 @@ export class Failure<A, B> implements Result<A, B> {
     }
 }
 
+export function failure(expected: any, actual: any): Result<any, any> {
+    return new Failure(expected, actual);
+}
+
 export function fail(expected: any, actual: any): Result<any, any> {
     return new Failure(expected, actual);
 }

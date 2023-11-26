@@ -6,6 +6,7 @@ import {DebugParser} from "./DebugParser.ts";
 import {optional} from "./OptionalParser.ts";
 import {many} from "./ManyParser.ts";
 import {pattern} from "./PatternParser.ts";
+import {not} from "./NotParser.ts";
 
 export function then<A, B, C>(second: Parser<A, C>): (first: Parser<A, B>) => Parser<A, [B, C]> {
     return first => pair(first, second);
@@ -19,12 +20,12 @@ export function followedBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) 
     return first => parser(pair(first, second), map(([b, _]) => b));
 }
 
-export function followedByOptional<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
-    return followedBy(optional(second));
+export function notFollowedBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
+    return followedBy(not(second));
 }
 
 export function separatedBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B[]> {
-    return first => parser(first, followedByOptional(second), many());
+    return first => parser(first, followedBy(optional(second)), many());
 }
 
 export function precededBy<A, B>(second: Parser<A, any>): (first: Parser<A, B>) => Parser<A, B> {
