@@ -1,6 +1,6 @@
 import {Parser, parser} from "../parsers/Parser.ts";
 import {string} from "../parsers/StringParser.ts";
-import {between, literal, next, separatedBy, surroundedBy, whitespace as ws} from "../parsers/parsers.ts";
+import {between, literal, next, separatedBy, surroundedBy, then, whitespace as ws} from "../parsers/parsers.ts";
 import {or} from "../parsers/OrParser.ts";
 import {map} from "../transducers/MapTransducer.ts";
 import {pattern} from "../parsers/PatternParser.ts";
@@ -33,6 +33,25 @@ function unescape(escaped: 'b' | 'n' | 'r' | 't' | 'f'): string {
 export class Comment {
     constructor(public value: string) {
     }
+}
+
+export interface JsdocTags {
+    type: string;
+}
+
+export class Jsdoc {
+    constructor(public tags: Partial<JsdocTags>) {
+    }
+}
+
+export class JsdocGrammar {
+    static typeExpression: Parser<string, string> = parser(pattern(/[a-zA-Z]+/), between(string('{'), string('}')));
+
+    static type: Parser<string, ['type', string]> = parser(ws(parser(string('@'), next(string('type')))), then(ws(JsdocGrammar.typeExpression)));
+
+    static tags: Parser<string, Partial<JsdocTags>> = parser(JsdocGrammar.type, many(), map(Object.fromEntries));
+
+    static jsdoc: Parser<string, Jsdoc> = parser(JsdocGrammar.tags, between(string('/**'), string('*/')), map(c => new Jsdoc(c)));
 }
 
 export class Grammar {
@@ -71,8 +90,12 @@ export class Grammar {
         map(([key, , value]) => [key, value]));
 
     static object: Parser<string, JsonValue> = parser(Grammar.member, separatedBy(string(',')),
-        between(string('{'), string('}')), map(members => Object.fromEntries(members)));
+        between(string('{'), string('}')), map(Object.fromEntries));
 
-
+    static custom: Parser<string, any> =
+        parser(JsdocGrammar.jsdoc, then(Grammar.value), map(([jsdoc, value]: [Jsdoc, JsonValue]) => {
+            const constructor = (globalThis as any)[jsdoc.tags.type!];
+            return constructor ? Reflect.construct(constructor, [value]) : value;
+        }));
 }
 

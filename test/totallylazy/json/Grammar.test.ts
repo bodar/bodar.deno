@@ -2,7 +2,7 @@ import {view} from "../../../src/totallylazy/parsers/View.ts";
 import {assertThat, assertTrue} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
-import {Grammar, Comment} from "../../../src/totallylazy/json/Grammar.ts";
+import {Comment, Grammar, Jsdoc, JsdocGrammar} from "../../../src/totallylazy/json/Grammar.ts";
 import {Failure} from "../../../src/totallylazy/parsers/Failure.ts";
 
 
@@ -74,7 +74,7 @@ Deno.test("Grammar", async (context) => {
         assertThat(Grammar.value.parse(view(' null ')).value, is(null));
     });
 
-    await context.step("can capture a comments", () => {
+    await context.step("can capture a comment", () => {
         assertThat(Grammar.comment.parse(view('// This is a single line comment\n')).value,
             equals(new Comment('This is a single line comment')));
         assertThat(Grammar.comment.parse(view('// This is a single line comment')).value,
@@ -95,5 +95,28 @@ Deno.test("Grammar", async (context) => {
             is('some string'));
         assertThat(Grammar.value.parse(view('/* This is a multi line comment */ "some string"')).value,
             is('some string'));
+    });
+
+    await context.step("can use a JSDOC comment to construct any custom Type that is in scope", () => {
+        const map = Grammar.custom.parse(view('/** @type {Map} */ [["key", "value"]]')).value;
+        assertTrue(map instanceof Map);
+        assertThat(map.get('key'), is('value'));
+
+        const set = Grammar.custom.parse(view('/** @type {Set} */ [1, 2]')).value;
+        assertTrue(set instanceof Set);
+        assertThat(set.has(1), is(true));
+        assertThat(set.has(2), is(true));
+
+        const date = Grammar.custom.parse(view('/** @type {Date} */ "2023-12-13T06:45:12.218Z"')).value;
+        assertTrue(date instanceof Date);
+        assertThat(date.toISOString(), is('2023-12-13T06:45:12.218Z'));
+    });
+});
+
+
+Deno.test("JsdocGrammar", async (context) => {
+    await context.step("can parse a JSDOC comment", () => {
+        const map = JsdocGrammar.jsdoc.parse(view('/** @type {Map} */')).value;
+        assertThat(map, equals(new Jsdoc({type: 'Map'})));
     });
 });
