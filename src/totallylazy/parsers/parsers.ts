@@ -44,7 +44,10 @@ export function returns<A, T>(value: T): (first: Parser<A, any>) => Parser<A, T>
     return instance => parser(instance, map(() => value));
 }
 
-export function ignore<A>(first: Parser<A, any>): Parser<A, undefined> {
+export function ignore<A>(): (first: Parser<A, any>) => Parser<A, undefined>;
+export function ignore<A>(first: Parser<A, any>): Parser<A, undefined>;
+export function ignore<A>(first?: Parser<A, any>): any {
+    if (!first) return ignore;
     return returns<A, any>(undefined)(first);
 }
 

@@ -74,12 +74,26 @@ Deno.test("Grammar", async (context) => {
         assertThat(Grammar.value.parse(view(' null ')).value, is(null));
     });
 
-    await context.step("supports comments", () => {
+    await context.step("can capture a comments", () => {
         assertThat(Grammar.comment.parse(view('// This is a single line comment\n')).value,
             equals(new Comment('This is a single line comment')));
         assertThat(Grammar.comment.parse(view('// This is a single line comment')).value,
             equals(new Comment('This is a single line comment')));
         assertThat(Grammar.comment.parse(view('/* This is a multi line comment */')).value,
             equals(new Comment('This is a multi line comment')));
+    });
+
+    await context.step("whitespace can contain a comment", () => {
+        assertThat(Grammar.whitespace(Grammar.null).parse(view('// This is a single line comment\n null')).value,
+            is(null));
+        assertThat(Grammar.whitespace(Grammar.null).parse(view('/* This is a multi line comment */ null')).value,
+            is(null));
+    });
+
+    await context.step("ignores comments", () => {
+        assertThat(Grammar.value.parse(view('// This is a single line comment\n "some string"')).value,
+            is('some string'));
+        assertThat(Grammar.value.parse(view('/* This is a multi line comment */ "some string"')).value,
+            is('some string'));
     });
 });

@@ -1,6 +1,6 @@
 import {Parser, parser} from "../parsers/Parser.ts";
 import {string} from "../parsers/StringParser.ts";
-import {between, literal, next, separatedBy, surroundedBy, whitespace} from "../parsers/parsers.ts";
+import {between, literal, next, separatedBy, surroundedBy, whitespace as ws} from "../parsers/parsers.ts";
 import {or} from "../parsers/OrParser.ts";
 import {map} from "../transducers/MapTransducer.ts";
 import {pattern} from "../parsers/PatternParser.ts";
@@ -11,6 +11,7 @@ import {lazy} from "../functions/lazy.ts";
 import {eof} from "../parsers/EofParser.ts";
 import {until} from "../parsers/UntilParser.ts";
 import {any} from "../parsers/AnyParser.ts";
+import {optional} from "../parsers/OptionalParser.ts";
 
 function unescape(escaped: 'b' | 'n' | 'r' | 't' | 'f'): string {
     switch (escaped) {
@@ -35,6 +36,18 @@ export class Comment {
 }
 
 export class Grammar {
+    static comment: Parser<string, Comment> = parser(or(
+        parser(pattern(/[^\n]*/), between(string('//'), or(string('\n'), eof()))),
+        parser(any(), until(string('*/')), between(string('/*'), string('*/')), map(characters => characters.join('')))
+    ), map(c => new Comment(c.trim())));
+
+    static whitespace<A>(instance: Parser<string, A>): Parser<string, A> {
+        return or(
+            ws(instance),
+            parser(ws(instance), surroundedBy(parser(Grammar.comment, optional()))),
+        );
+    }
+
     static null: Parser<string, null> = literal(null);
 
     static boolean: Parser<string, boolean> = or(literal(true), literal(false));
@@ -52,20 +65,17 @@ export class Grammar {
 
     static number: Parser<string, number> = parser(pattern(/[-+eE.\d]+/), map(Number));
 
-    static value: Parser<string, JsonValue> = lazy(() => whitespace(or(Grammar.object, Grammar.array, Grammar.string, Grammar.number, Grammar.boolean, Grammar.null)));
+    static value: Parser<string, JsonValue> = lazy(() => Grammar.whitespace(or(Grammar.object, Grammar.array, Grammar.string, Grammar.number, Grammar.boolean, Grammar.null)));
 
     static array: Parser<string, JsonValue[]> = parser(Grammar.value, separatedBy(string(',')),
         between(string('['), string(']')));
 
-    static member: Parser<string, [string, JsonValue]> = parser(triple(whitespace(Grammar.string), string(':'), Grammar.value),
+    static member: Parser<string, [string, JsonValue]> = parser(triple(Grammar.whitespace(Grammar.string), string(':'), Grammar.value),
         map(([key, , value]) => [key, value]));
 
     static object: Parser<string, JsonValue> = parser(Grammar.member, separatedBy(string(',')),
         between(string('{'), string('}')), map(members => Object.fromEntries(members)));
 
-    static comment: Parser<string, Comment> = parser(or(
-        parser(pattern(/[^\n]*/), between(string('//'), or(string('\n'), eof()))),
-        parser(any(), until(string('*/')), between(string('/*'), string('*/')), map(characters => characters.join('')))
-        ), map(c => new Comment(c.trim())));
+
 }
 

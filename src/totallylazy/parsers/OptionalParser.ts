@@ -15,6 +15,9 @@ export class OptionalParser<A, B> implements Parser<A, B | undefined> {
     }
 }
 
-export function optional<A, B>(parser: Parser<A, B>): Parser<A, B | undefined> {
+export function optional<A, B>(): (parser: Parser<A, B>) => Parser<A, B | undefined> ;
+export function optional<A, B>(parser: Parser<A, B>): Parser<A, B | undefined> ;
+export function optional<A, B>(parser?: Parser<A, B>): any {
+    if(!parser) return optional;
     return new OptionalParser(parser);
 }
