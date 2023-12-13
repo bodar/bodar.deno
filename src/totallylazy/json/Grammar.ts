@@ -42,10 +42,7 @@ export class Grammar {
     ), map(c => new Comment(c.trim())));
 
     static whitespace<A>(instance: Parser<string, A>): Parser<string, A> {
-        return or(
-            ws(instance),
-            parser(ws(instance), surroundedBy(parser(Grammar.comment, optional()))),
-        );
+        return parser(ws(instance), surroundedBy(parser(Grammar.comment, optional())));
     }
 
     static null: Parser<string, null> = literal(null);
