@@ -29,14 +29,15 @@ export class Json5GrammarClass extends JsonGrammarClass {
     }
 
     value(): Parser<string, JsonValue | any> {
-        return lazy(() => or(super.value(), this.custom));
+        return lazy(() => or(this.custom(), super.value()));
     }
 
-    custom: Parser<string, any> =
-        parser(JsdocGrammar.jsdoc, then(this.value()), map(([jsdoc, value]: [Jsdoc, JsonValue]) => {
+    custom(): Parser<string, any> {
+        return parser(JsdocGrammar.jsdoc, then(this.value()), map(([jsdoc, value]: [Jsdoc, JsonValue]) => {
             const constructor = (globalThis as any)[jsdoc.tags.type!];
             return constructor ? Reflect.construct(constructor, [value]) : value;
         }));
+    }
 }
 
 export const Json5Grammar = new Json5GrammarClass();
