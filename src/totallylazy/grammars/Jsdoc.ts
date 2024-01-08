@@ -9,17 +9,17 @@ export interface JsdocTags {
     type: string;
 }
 
-export class Jsdoc {
+export class JsdocComment {
     constructor(public tags: Partial<JsdocTags>) {
     }
 }
 
-export class JsdocGrammar {
+export class Jsdoc {
     static typeExpression: Parser<string, string> = parser(pattern(/[a-zA-Z]+/), between(string('{'), string('}')));
 
-    static type: Parser<string, ['type', string]> = parser(ws(parser(string('@'), next(string('type')))), then(ws(JsdocGrammar.typeExpression)));
+    static type: Parser<string, ['type', string]> = parser(ws(parser(string('@'), next(string('type')))), then(ws(Jsdoc.typeExpression)));
 
-    static tags: Parser<string, Partial<JsdocTags>> = parser(JsdocGrammar.type, many(), map(Object.fromEntries));
+    static tags: Parser<string, Partial<JsdocTags>> = parser(Jsdoc.type, many(), map(Object.fromEntries));
 
-    static jsdoc: Parser<string, Jsdoc> = parser(JsdocGrammar.tags, between(string('/**'), string('*/')), map(c => new Jsdoc(c)));
+    static jsdoc: Parser<string, JsdocComment> = parser(Jsdoc.tags, between(string('/**'), string('*/')), map(c => new JsdocComment(c)));
 }
