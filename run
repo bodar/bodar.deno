@@ -26,7 +26,8 @@ function setup_deno() {
 
   if [[ ! $(asdf plugin list) =~ deno ]]; then
     echo "* Downloading and installing deno plugin..."
-    asdf plugin add deno > /dev/null 2>&1
+    #asdf plugin add deno > /dev/null 2>&1
+    asdf plugin add deno https://github.com/danielbodart/asdf-deno.git
   fi
   asdf install
 }
