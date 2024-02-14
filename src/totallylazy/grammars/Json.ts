@@ -27,7 +27,7 @@ export class Json {
     static boolean: Parser<string, boolean> = or(literal(true), literal(false));
 
     static escaped: Parser<string, string> = parser(string('\\'), next(or(
-        among("[\"\\/]"),
+        among("\"\\/"),
         parser(among("bfnrt"), map(unescape)),
         parser(pattern(/u[0-9a-fA-F]{4}/), map(u => String.fromCharCode(parseInt(u.slice(1), 16))))
     )));
