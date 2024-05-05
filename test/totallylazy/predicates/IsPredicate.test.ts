@@ -1,4 +1,4 @@
-import {assert} from "https://deno.land/std@0.200.0/assert/assert.ts";
+import {assert} from "std/assert/assert.ts";
 import {is, isIsPredicate} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 
 Deno.test("IsPredicate", async (context) => {

@@ -1,7 +1,7 @@
-import {assertThrows} from "https://deno.land/std@0.200.0/assert/assert_throws.ts";
+import {assertThrows} from "std/assert/assert_throws.ts";
 import {assertThat} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
-import {AssertionError} from "https://deno.land/std@0.200.0/assert/assertion_error.ts";
+import {AssertionError} from "std/assert/assertion_error.ts";
 
 Deno.test("assertThat", async (context) => {
     const actual = 2;

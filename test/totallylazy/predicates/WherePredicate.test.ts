@@ -4,7 +4,7 @@ import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 import {equals} from "../../../src/totallylazy/predicates/EqualsPredicate.ts";
 import {assertThat, assertTrue} from "../../../src/totallylazy/asserts/assertThat.ts";
 import {isNotPredicate, not} from "../../../src/totallylazy/predicates/NotPredicate.ts";
-import {assert} from "https://deno.land/std@0.200.0/assert/assert.ts";
+import {assert} from "std/assert/assert.ts";
 
 interface Car {
     make: string;

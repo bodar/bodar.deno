@@ -1,4 +1,4 @@
-import {Client} from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+import {Client} from "postgres/mod.ts";
 import {Transducer} from "../../../totallylazy/transducers/Transducer.ts";
 import {Definition, toSelect, Supported} from "../builder/builders.ts";
 import {statement} from "./statement.ts";

@@ -1,4 +1,4 @@
-import {QueryOptions} from "https://deno.land/x/postgres@v0.17.0/query/query.ts";
+import {QueryOptions} from "postgres/query/query.ts";
 import {Sql} from "../template/Sql.ts";
 import {Identifier} from "../template/Identifier.ts";
 import {Value} from "../template/Value.ts";

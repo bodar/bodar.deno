@@ -1,5 +1,5 @@
-import {QueryOptions} from "https://deno.land/x/postgres@v0.17.0/query/query.ts";
-import {encodeHex} from "https://deno.land/std@0.203.0/encoding/hex.ts";
+import {QueryOptions} from "postgres/query/query.ts";
+import {encodeHex} from "std/encoding/hex.ts";
 import {Sql} from "../template/Sql.ts";
 import {statement} from "./statement.ts";
 

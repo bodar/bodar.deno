@@ -1,4 +1,4 @@
-import {assert} from "https://deno.land/std@0.200.0/assert/mod.ts";
+import {assert} from "std/assert/mod.ts";
 import {is} from "../../../src/totallylazy/predicates/IsPredicate.ts";
 import {not} from "../../../src/totallylazy/predicates/NotPredicate.ts";
 

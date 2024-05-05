@@ -1,4 +1,4 @@
-import {Client} from "https://deno.land/x/postgres@v0.17.0/mod.ts";
+import {Client} from "postgres/mod.ts";
 import {PostgresRecords} from "../../../../src/lazyrecords/sql/postgres/PostgresRecords.ts";
 import {property, Property} from "../../../../src/totallylazy/functions/Property.ts";
 import {filter} from "../../../../src/totallylazy/transducers/FilterTransducer.ts";
